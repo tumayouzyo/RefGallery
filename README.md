@@ -2,10 +2,7 @@
 ```
 git clone https://github.com/tumayouzyo/RefGallery.git
 ```
-if use Exif
-```
-python -m pip install Pillow
-```
+if use Exif, `python -m pip install Pillow` within the same Python environment used to generate the gallery.
 
 ## Usage
 local image
