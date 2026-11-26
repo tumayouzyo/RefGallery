@@ -230,7 +230,7 @@ def local_capture(row):
     if not isinstance(value, str) or value.startswith(("https://", "http://")):
         return None, ""
     path = base / value
-    return (path.parent.resolve(), path.stem.casefold()), path.suffix.lower()
+    return path.stem.casefold(), path.suffix.lower()
 
 
 def build(args):
