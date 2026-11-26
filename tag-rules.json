@@ -1,0 +1,407 @@
+{
+  "front": [
+    "front",
+    "正面",
+    "前面"
+  ],
+  "side": [
+    "side",
+    "profile",
+    "側面",
+    "真横"
+  ],
+  "back": [
+    "back",
+    "rear",
+    "背面",
+    "後ろ"
+  ],
+  "detail": [
+    "detail",
+    "closeup",
+    "寄り",
+    "詳細"
+  ],
+  "3d": [
+    "3d",
+    "render",
+    "レンダー"
+  ],
+  "illustration": [
+    "illustration",
+    "イラスト",
+    "設定画"
+  ],
+  "photo": [
+    "photo",
+    "写真",
+    "実写"
+  ],
+  "three-quarter": [
+    "three-quarter",
+    "three_quarter",
+    "3quarter",
+    "斜め前",
+    "斜め後ろ",
+    "斜め横",
+    "斜め視点"
+  ],
+  "top": [
+    "top",
+    "overhead",
+    "上面",
+    "真上",
+    "俯瞰"
+  ],
+  "bottom": [
+    "bottom",
+    "underside",
+    "下面",
+    "裏底"
+  ],
+  "turnaround": [
+    "turnaround",
+    "multiview",
+    "三面図",
+    "四面図",
+    "多面図"
+  ],
+  "silhouette": [
+    "silhouette",
+    "シルエット",
+    "輪郭"
+  ],
+  "scale": [
+    "scale",
+    "dimension",
+    "dimensions",
+    "寸法",
+    "サイズ比較",
+    "スケール比較"
+  ],
+  "wireframe": [
+    "wireframe",
+    "ワイヤーフレーム"
+  ],
+  "topology": [
+    "topology",
+    "トポロジー"
+  ],
+  "uv": [
+    "uv",
+    "unwrap",
+    "uv展開",
+    "uv配置"
+  ],
+  "texture": [
+    "texture",
+    "textures",
+    "テクスチャ"
+  ],
+  "material": [
+    "material",
+    "materials",
+    "材質",
+    "マテリアル"
+  ],
+  "trim-sheet": [
+    "trim-sheet",
+    "trim_sheet",
+    "トリムシート"
+  ],
+  "normal-map": [
+    "normal-map",
+    "normal_map",
+    "法線マップ",
+    "ノーマルマップ"
+  ],
+  "lighting": [
+    "lighting",
+    "ライティング",
+    "照明設計"
+  ],
+  "avatar": [
+    "avatar",
+    "アバター",
+    "素体"
+  ],
+  "character": [
+    "character",
+    "キャラクター"
+  ],
+  "anatomy": [
+    "anatomy",
+    "人体",
+    "解剖",
+    "骨格"
+  ],
+  "face": [
+    "face",
+    "顔立ち",
+    "顔面",
+    "顔アップ",
+    "顔資料",
+    "顔モデル",
+    "表情"
+  ],
+  "eyes": [
+    "eye",
+    "eyes",
+    "瞳",
+    "眼球",
+    "虹彩",
+    "まぶた",
+    "目元"
+  ],
+  "hair": [
+    "hair",
+    "hairstyle",
+    "髪",
+    "ヘアスタイル"
+  ],
+  "hands": [
+    "hand",
+    "hands",
+    "finger",
+    "fingers",
+    "手指",
+    "手の甲",
+    "手のひら",
+    "手元",
+    "指関節"
+  ],
+  "feet": [
+    "foot",
+    "feet",
+    "足裏",
+    "足首",
+    "足先"
+  ],
+  "expression": [
+    "expression",
+    "expressions",
+    "facial",
+    "表情",
+    "フェイシャル"
+  ],
+  "pose": [
+    "pose",
+    "poses",
+    "posing",
+    "ポーズ",
+    "立ち姿",
+    "座り姿"
+  ],
+  "rig": [
+    "rig",
+    "rigging",
+    "skeleton",
+    "armature",
+    "リグ",
+    "ボーン",
+    "アーマチュア"
+  ],
+  "skin-weights": [
+    "skin-weights",
+    "skin_weights",
+    "スキンウェイト",
+    "ウェイトペイント"
+  ],
+  "blend-shape": [
+    "blendshape",
+    "blend-shape",
+    "blend_shape",
+    "シェイプキー",
+    "ブレンドシェイプ"
+  ],
+  "clothing": [
+    "clothing",
+    "garment",
+    "outfit",
+    "衣装",
+    "服飾"
+  ],
+  "drape": [
+    "drape",
+    "drapery",
+    "cloth-fold",
+    "cloth_fold",
+    "布のシワ",
+    "ドレープ",
+    "布の垂れ"
+  ],
+  "knot": [
+    "knot",
+    "結び目",
+    "前結び",
+    "脇結び"
+  ],
+  "seam": [
+    "seam",
+    "seams",
+    "stitching",
+    "縫い目",
+    "縫製",
+    "ステッチ"
+  ],
+  "pattern-piece": [
+    "pattern-piece",
+    "pattern_piece",
+    "型紙",
+    "パターンピース"
+  ],
+  "prop": [
+    "prop",
+    "props",
+    "プロップ",
+    "小道具"
+  ],
+  "hard-surface": [
+    "hard-surface",
+    "hard_surface",
+    "ハードサーフェス"
+  ],
+  "parts": [
+    "parts",
+    "部品",
+    "パーツ",
+    "分解図",
+    "組立図"
+  ],
+  "mechanism": [
+    "mechanism",
+    "hinge",
+    "hinges",
+    "機構",
+    "ヒンジ",
+    "蝶番"
+  ],
+  "hardware": [
+    "fastener",
+    "fasteners",
+    "screws",
+    "bolts",
+    "固定金具",
+    "ネジ",
+    "ねじ穴",
+    "ボルト"
+  ],
+  "wear-and-tear": [
+    "weathering",
+    "patina",
+    "scratch",
+    "scratches",
+    "ウェザリング",
+    "傷跡",
+    "経年劣化",
+    "擦れ"
+  ],
+  "wood": [
+    "wood",
+    "wooden",
+    "木材",
+    "木目"
+  ],
+  "metal": [
+    "metal",
+    "metallic",
+    "金属"
+  ],
+  "plastic": [
+    "plastic",
+    "プラスチック",
+    "樹脂"
+  ],
+  "glass": [
+    "glass",
+    "ガラス"
+  ],
+  "stone": [
+    "stone",
+    "rock",
+    "岩石",
+    "石材"
+  ],
+  "environment": [
+    "environment",
+    "env",
+    "背景",
+    "環境モデル"
+  ],
+  "architecture": [
+    "architecture",
+    "building",
+    "buildings",
+    "建築",
+    "建物"
+  ],
+  "facade": [
+    "facade",
+    "façade",
+    "外壁",
+    "ファサード"
+  ],
+  "interior": [
+    "interior",
+    "indoors",
+    "室内",
+    "内装"
+  ],
+  "exterior": [
+    "exterior",
+    "屋外",
+    "外観"
+  ],
+  "floor-plan": [
+    "floor-plan",
+    "floor_plan",
+    "間取り",
+    "平面図"
+  ],
+  "cross-section": [
+    "cross-section",
+    "cross_section",
+    "断面図"
+  ],
+  "urban": [
+    "urban",
+    "cityscape",
+    "街並み",
+    "街路",
+    "都市景観"
+  ],
+  "terrain": [
+    "terrain",
+    "heightmap",
+    "地形",
+    "標高"
+  ],
+  "vegetation": [
+    "vegetation",
+    "foliage",
+    "植生",
+    "植栽",
+    "樹木"
+  ],
+  "landscape": [
+    "landscape",
+    "風景",
+    "景観"
+  ],
+  "modular-kit": [
+    "modular-kit",
+    "modular_kit",
+    "モジュラーキット",
+    "モジュラー建築"
+  ],
+  "composition": [
+    "composition",
+    "構図"
+  ],
+  "set-dressing": [
+    "set-dressing",
+    "set_dressing",
+    "小物配置",
+    "装飾配置"
+  ]
+}

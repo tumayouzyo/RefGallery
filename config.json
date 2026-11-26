@@ -1,0 +1,5 @@
+{
+  "output_root": "Outputs",
+  "tag_rules": "tag-rules.json",
+  "tag_language": "auto"
+}

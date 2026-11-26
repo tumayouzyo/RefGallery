@@ -1,0 +1,19 @@
+{
+  "title": "資料ギャラリー",
+  "tag_labels": {
+    "front": "正面",
+    "detail": "細部"
+  },
+  "items": [
+    {
+      "title": "公開資料の例",
+      "group": "サンプル",
+      "tags": [
+        "front",
+        "detail"
+      ],
+      "note": "image に公開画像URLまたはこのJSONからの相対パスを指定します。",
+      "source": "https://example.com/"
+    }
+  ]
+}
