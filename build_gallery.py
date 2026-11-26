@@ -82,9 +82,19 @@ def reference(value, base, output, mode, allow_missing=False):
 FOCAL_LENGTH_STEPS = (8, 10, 12, 14, 15, 16, 18, 20, 24, 28, 35, 40, 50, 55,
                       60, 70, 85, 100, 105, 120, 135, 150, 180, 200, 250, 300,
                       400, 500, 600, 800, 1000, 1200)
-APERTURE_STEPS = (0.95, 1.2, 1.4, 1.8, 2, 2.8, 3.5, 4, 4.5, 5.6, 6.3, 7.1,
-                  8, 9, 10, 11, 13, 16, 18, 22, 25, 32, 45, 64)
-ISO_STEPS = (50, 100, 200, 400, 800, 1250, 1600, 3200, 6400)
+APERTURE_STEPS = (1, 1.4, 2, 2.8, 4, 5.6, 8, 11, 16, 22, 32, 45, 64)
+SHUTTER_STEPS = tuple(Fraction(step) for step in (
+    "900", "720", "600", "480", "360", "300", "240", "180", "120", "90", "60",
+    "30", "25", "20", "15", "13", "10", "8", "6", "5", "4", "3.2", "2.5", "2",
+    "1.6", "1.3", "1", "0.8", "0.6", "1/2", "0.4", "1/3",
+)) + tuple(Fraction(1, n) for n in (
+    4, 5, 6, 8, 10, 13, 15, 20, 25, 30, 40, 50, 60, 80, 100, 125, 160, 200,
+    250, 320, 400, 500, 640, 800, 1000, 1250, 1600, 2000, 2500, 3200, 4000,
+    5000, 6400, 8000, 10000, 12800, 16000, 20000, 25600, 32000, 40000,
+    50000, 64000, 80000,
+))
+ISO_STEPS = (50, 100, 200, 400, 800, 1250, 1600, 3200, 6400, 12800, 25600,
+             51200, 102400, 204800, 409600, 819200, 1638400, 3280000)
 
 
 def nearest_step(value, steps):
@@ -119,7 +129,12 @@ def photo_exif(path):
     except ValueError:
         date = ""
     focal = nearest_step(number(values.get(37386)), FOCAL_LENGTH_STEPS)
-    aperture = nearest_step(number(values.get(33437)), APERTURE_STEPS)
+    aperture_value = number(values.get(33437))
+    aperture = None
+    if aperture_value is not None:
+        stop = min(range(len(APERTURE_STEPS)),
+                   key=lambda index: abs(2 * math.log2(aperture_value) - index))
+        aperture = APERTURE_STEPS[stop]
     exposure = number(values.get(33434))
     iso_value = values.get(34855) or values.get(34867)
     if isinstance(iso_value, (tuple, list)):
@@ -127,8 +142,11 @@ def photo_exif(path):
     iso = nearest_step(number(iso_value), ISO_STEPS)
     shutter = ""
     if exposure:
-        fraction = Fraction(exposure).limit_denominator(1000000)
-        shutter = f"{fraction} s" if exposure < 1 and fraction else f"{exposure:g} s"
+        step = min(SHUTTER_STEPS, key=lambda value: abs(math.log2(exposure / value)))
+        if step < 1 and step.numerator == 1:
+            shutter = f"{step} s"
+        else:
+            shutter = f"{float(step):g} s"
 
     return {key: label for key, label in {
         "camera": model(values.get(272)),
@@ -136,7 +154,7 @@ def photo_exif(path):
         "focal-length": f"{focal:g} mm" if focal else "",
         "aperture": f"f/{aperture:g}" if aperture else "",
         "shutter": shutter,
-        "iso": f"ISO {iso:g}" if iso else "",
+        "iso": f"ISO {iso}" if iso else "",
         "shot-date": date,
     }.items() if label}
 
