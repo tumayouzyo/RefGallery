@@ -3,11 +3,19 @@ import argparse
 import hashlib
 import html
 import json
+import math
+from datetime import datetime
+from fractions import Fraction
 import os
 import re
 from pathlib import Path
 from urllib.parse import quote, unquote, urlsplit
 from urllib.request import url2pathname
+
+try:
+    from PIL import Image
+except ImportError:
+    Image = None
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_CONFIG = HERE / "config.json"
@@ -65,6 +73,56 @@ def reference(value, base, output, mode, allow_missing=False):
     except ValueError:  # Windows cannot relativize paths on different drives.
         return path.as_uri()
     return quote(Path(relative).as_posix(), safe="/")
+
+
+def photo_exif(path):
+    if Image is None or path.suffix.lower() == ".svg":
+        return {}
+    try:
+        with Image.open(path) as photo:
+            root = photo.getexif()
+            values = {**root, **root.get_ifd(0x8769)}
+    except (OSError, ValueError, SyntaxError, TypeError, Image.DecompressionBombError):
+        return {}
+
+    def model(value):
+        if isinstance(value, bytes):
+            value = value.decode("utf-8", errors="replace")
+        return " ".join(value.replace("\x00", "").split()) if isinstance(value, str) else ""
+
+    def number(value):
+        try:
+            n = float(value)
+            return n if math.isfinite(n) and n > 0 else None
+        except (ValueError, TypeError, OverflowError, ZeroDivisionError):
+            return None
+
+    date = model(values.get(36867))  # DateTimeOriginal, not file modification time.
+    try:
+        date = datetime.strptime(date[:10], "%Y:%m:%d").strftime("%y-%m-%d")
+    except ValueError:
+        date = ""
+    focal = number(values.get(37386))
+    aperture = number(values.get(33437))
+    exposure = number(values.get(33434))
+    iso_value = values.get(34855) or values.get(34867)
+    if isinstance(iso_value, (tuple, list)):
+        iso_value = next(iter(iso_value), None)
+    iso = number(iso_value)
+    shutter = ""
+    if exposure:
+        fraction = Fraction(exposure).limit_denominator(1000000)
+        shutter = f"{fraction} s" if exposure < 1 and fraction else f"{exposure:g} s"
+
+    return {key: label for key, label in {
+        "camera": model(values.get(272)),
+        "lens": model(values.get(42036)),
+        "focal-length": f"{focal:g} mm" if focal else "",
+        "aperture": f"f/{aperture:g}" if aperture else "",
+        "shutter": shutter,
+        "iso": f"ISO {iso:g}" if iso else "",
+        "shot-date": date,
+    }.items() if label}
 
 
 def auto_tags(path, rules):
@@ -203,6 +261,7 @@ def build(args):
                          str(path), str(path), folder, False))
 
     groups, group_ids, items, seen = {}, {}, [], {}
+    exif_labels = {}
     for entry, image, source, entry_base, retained in rows:
         mode = "mixed" if retained else args.mode
         image_url = reference(image, entry_base, output, mode, retained)
@@ -232,6 +291,16 @@ def build(args):
         tags = list(dict.fromkeys(map(validate_tag, tags)))
         if any(re.fullmatch(r"group-\d+", tag) for tag in tags):
             raise ValueError("group-001 形式のタグは自動生成用です")
+        if image and not retained and not image.startswith(("https://", "http://")):
+            metadata = photo_exif(entry_base / image)
+            if metadata and "photo" not in tags:
+                tags.append("photo")
+            for field, label in metadata.items():
+                token = hashlib.sha256(label.encode("utf-8")).hexdigest()[:16]
+                tag = f"exif-{field}-{token}"
+                tags.append(tag)
+                exif_labels[tag] = label
+            tags = list(dict.fromkeys(tags))
         if key in seen:
             item = seen[key]
             item["tags"] = list(dict.fromkeys([*item["tags"], *tags, *group_tags]))
@@ -261,6 +330,7 @@ def build(args):
             for tag, aliases in rules.items()
         }
         labels = {**japanese_aliases, **labels}
+    labels.update(exif_labels)
     topics = {tag: [labels.get(tag, tag), COLORS[index % len(COLORS)]]
               for index, tag in enumerate(dict.fromkeys(
                   tag for item in items for tag in item["tags"] if tag not in groups))}
