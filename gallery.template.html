@@ -68,7 +68,7 @@ dialog{width:min(1360px,calc(100vw - 126px))}
 </dialog>
 <script id="catalog" type="application/json">@@CATALOG@@</script>
 <script>
-const {groups,items,topics}=JSON.parse(document.querySelector('#catalog').textContent);
+const {groups,items,topics,topicOrder}=JSON.parse(document.querySelector('#catalog').textContent);
 const topicInfo=Object.assign(Object.create(null),topics);
 const selected=new Set();
 const byId=id=>document.getElementById(id);
@@ -323,7 +323,7 @@ function render(){
  byId('reset').disabled=selected.size===0;
  for(const button of document.querySelectorAll('button[data-tag]')) button.setAttribute('aria-pressed',String(selected.has(button.dataset.tag)));
 }
-byId('topics').append(...['front','side','back',...Object.keys(topicInfo).filter(tag=>!['front','side','back'].includes(tag))].filter(tag=>counts.has(tag)).map(tag=>chip(tag,true)));
+byId('topics').append(...(topicOrder ?? Object.keys(topicInfo)).filter(tag=>counts.has(tag)).map(tag=>chip(tag,true)));
 byId('outfits').append(...Object.keys(groups).map(tag=>chip(tag,true)));
 byId('reset').addEventListener('click',()=>{selected.clear();render();});
 external.addEventListener('change',render);

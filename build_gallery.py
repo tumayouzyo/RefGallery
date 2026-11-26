@@ -20,6 +20,10 @@ except ImportError:
 HERE = Path(__file__).resolve().parent
 DEFAULT_CONFIG = HERE / "config.json"
 EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif", ".svg", ".bmp"}
+JPEG_EXTENSIONS = {".jpg", ".jpeg", ".jpe"}
+RAW_EXTENSIONS = {".3fr", ".arw", ".cr2", ".cr3", ".dng", ".erf", ".iiq", ".kdc",
+                  ".mef", ".mos", ".mrw", ".nef", ".nrw", ".orf", ".pef", ".raf",
+                  ".raw", ".rw2", ".rwl", ".sr2", ".srf", ".srw", ".x3f"}
 COLORS = ("#a6b2e5", "#8bc7d7", "#8fc9b0", "#e29aa8", "#d8ba9e")
 TAG_PATTERN = re.compile(r"[\w-]+", re.UNICODE)
 
@@ -125,6 +129,27 @@ def photo_exif(path):
     }.items() if label}
 
 
+def exif_sort_key(tag, label):
+    fields = ("camera", "lens", "focal-length", "aperture", "shutter", "iso", "shot-date")
+    field = tag.removeprefix("exif-").rsplit("-", 1)[0]
+    folded = label.casefold()
+    if field not in fields:
+        return len(fields), True, 0, folded
+    rank = fields.index(field)
+    try:
+        if field == "shot-date":
+            return rank, False, datetime.strptime(label, "%y-%m-%d").date().toordinal(), folded
+        patterns = {"focal-length": r"(.+) mm", "aperture": r"f/(.+)",
+                    "shutter": r"(.+) s", "iso": r"iso (.+)"}
+        if field in patterns:
+            match = re.fullmatch(patterns[field], folded)
+            if match:
+                return rank, False, Fraction(match[1]), folded
+    except (ValueError, ZeroDivisionError):
+        pass
+    return rank, True, 0, folded
+
+
 def auto_tags(path, rules):
     parts = [part.casefold() for part in (*path.parts[:-1], path.stem)]
     tokens = set(re.findall(r"[a-z0-9]+", " ".join(parts)))
@@ -199,6 +224,15 @@ def prior_rows(catalog, existing):
         yield entry, image, source, existing.parent, True
 
 
+def local_capture(row):
+    _, image, source, base, _ = row
+    value = image or source
+    if not isinstance(value, str) or value.startswith(("https://", "http://")):
+        return None, ""
+    path = base / value
+    return (path.parent.resolve(), path.stem.casefold()), path.suffix.lower()
+
+
 def build(args):
     config_file = args.config.resolve()
     config = read_json(config_file)
@@ -253,12 +287,21 @@ def build(args):
         if not folder.is_dir():
             raise ValueError(f"画像フォルダーが見つかりません: {folder}")
         for path in sorted(folder.rglob("*"), key=lambda item: (item.as_posix().casefold(), item.as_posix())):
-            if not path.is_file() or path.suffix.lower() not in EXTENSIONS:
+            if not path.is_file() or path.suffix.lower() not in (EXTENSIONS | JPEG_EXTENSIONS | RAW_EXTENSIONS):
                 continue
             relative = path.relative_to(folder)
             group = relative.parts[0] if len(relative.parts) > 1 else "直下の画像"
-            rows.append(({"title": path.stem, "group": group, "tags": auto_tags(relative, rules)},
-                         str(path), str(path), folder, False))
+            entry = {"title": path.stem, "group": group, "tags": auto_tags(relative, rules)}
+            raw = path.suffix.lower() in RAW_EXTENSIONS
+            if raw:
+                entry["tags"].append("raw")
+                entry["note"] = "RAW写真。出典リンクから元ファイルを開けます。"
+            rows.append((entry, None if raw else str(path), str(path), folder, False))
+
+    captures = [local_capture(row) for row in rows]
+    jpeg_keys = {key for key, suffix in captures if suffix in JPEG_EXTENSIONS}
+    rows = [row for row, (key, suffix) in zip(rows, captures)
+            if suffix not in RAW_EXTENSIONS or key not in jpeg_keys]
 
     groups, group_ids, items, seen = {}, {}, [], {}
     exif_labels = {}
@@ -330,15 +373,23 @@ def build(args):
             for tag, aliases in rules.items()
         }
         labels = {**japanese_aliases, **labels}
+    labels.setdefault("raw", "RAW写真" if tag_language == "ja" else "RAW photo")
     labels.update(exif_labels)
+    present = dict.fromkeys(
+        tag for item in items for tag in item["tags"] if tag not in groups
+    )
+    rule_tags = [tag for tag in rules if tag in present and not tag.startswith("exif-")]
+    extra_tags = [tag for tag in present if tag not in rules and not tag.startswith("exif-")]
+    exif_tags = [tag for tag in present if tag.startswith("exif-")]
+    exif_tags.sort(key=lambda tag: exif_sort_key(tag, labels.get(tag, tag)))
+    topic_order = [*rule_tags, *extra_tags, *exif_tags]
     topics = {tag: [labels.get(tag, tag), COLORS[index % len(COLORS)]]
-              for index, tag in enumerate(dict.fromkeys(
-                  tag for item in items for tag in item["tags"] if tag not in groups))}
+              for index, tag in enumerate(topic_order)}
     gallery = {"title": title}
     if args.output or preferred:
         gallery["preferredOutput"] = str(output)
     catalog = json.dumps({"groups": groups, "items": items, "topics": topics,
-                          "tagLanguage": tag_language, "gallery": gallery}, ensure_ascii=False)
+                          "tagLanguage": tag_language, "topicOrder": topic_order, "gallery": gallery}, ensure_ascii=False)
     catalog = catalog.replace("<", r"\u003c")
     template = (HERE / "gallery.template.html").read_text(encoding="utf-8")
     values = {"@@TITLE@@": html.escape(title), "@@CATALOG@@": catalog}
