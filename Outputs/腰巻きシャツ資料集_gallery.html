@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>腰巻きシャツ｜3Dモデリング資料集</title>
+<style>
+:root{color-scheme:dark;--bg:#201f1f;--muted:#bdb7bb;--line:#403c40;--ink:#f7f2f4;--accent:#a5cffc}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 system-ui,"Yu Gothic UI",sans-serif}main{width:min(1120px,calc(100% - 40px));margin:38px auto 60px}
+h1{font-size:clamp(25px,4vw,38px);letter-spacing:.03em;margin:0}header p{margin:5px 0 24px;color:var(--muted)}a{color:var(--accent);text-underline-offset:3px}button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid white;outline-offset:4px}
+.filters{display:flex;flex-wrap:wrap;gap:7px}.chip{border:1px solid transparent;border-radius:4px;background:var(--chip,#545161);padding:5px 10px;color:#171622;font-size:12px;font-weight:750;min-height:34px}.chip[aria-pressed=true]{border-color:white;box-shadow:0 0 0 1px white inset;color:#fff;background:#465677}.chip span{margin-left:6px;opacity:.8}.outfits{margin:13px 0 0}.outfits summary{cursor:pointer;width:fit-content}.outfits .filters{margin-top:10px}.outfits .chip{--chip:#b0a5c6}
+.toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0 17px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted)}.toolbar label{margin-left:auto}.minor{border:1px solid var(--line);background:#2e2c30;border-radius:6px;padding:4px 10px}.minor:disabled{opacity:.46;cursor:default}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:23px 18px}.tile{min-width:0}.thumb{position:relative;display:grid;place-items:center;width:100%;aspect-ratio:1;border:0;border-radius:8px;overflow:hidden;background:#32303a;padding:0}.tile:nth-child(3n+2) .thumb{background:#30373c}.tile:nth-child(3n+3) .thumb{background:#393035}.thumb:hover img{filter:brightness(1.12)}.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.placeholder{max-width:88%;text-align:left;color:#ddd4df;line-height:1.35}.placeholder strong{display:block;font-size:19px;margin-bottom:8px}.placeholder small{font-size:11px;color:#e1d4e2}.tile h2{font-size:11px;font-weight:500;line-height:1.4;margin:6px 0 0}
+#empty{padding:30px 0;color:var(--muted)}footer{margin-top:32px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+dialog{border:1px solid var(--line);background:#29272b;color:var(--ink);width:min(900px,94vw);max-height:92vh;border-radius:12px;padding:18px;overflow:auto}dialog::backdrop{background:#101016d9}.dialog-head{display:flex;align-items:start;justify-content:space-between;gap:12px}.dialog-head h2{margin:0;font-size:20px}.preview{display:block;max-width:100%;max-height:58vh;margin:16px auto;object-fit:contain}.dialog-links{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0}.dialog-tags{margin-top:12px}
+@media(max-width:850px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:630px){main{width:calc(100% - 26px);margin-top:22px}.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 10px}.toolbar label{margin-left:0}}
+@media(max-width:430px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+[hidden]{display:none!important}
+
+.nav{width:42px;height:48px;font-size:22px;padding:0}.position{text-align:center;color:var(--muted);font-size:12px;margin:0}.media-status{padding:12px;text-align:center;color:var(--muted)}
+@media(max-width:430px){.nav{width:30px}}
+dialog{overflow:visible;padding:0}
+.dialog-content{max-height:calc(92vh - 2px);overflow:auto;padding:18px;border-radius:inherit}
+.nav{position:absolute;top:50%;margin:0;transform:translateY(-50%)}
+#previous{right:calc(100% + 12px)}
+#next{left:calc(100% + 12px)}
+@media(max-width:1020px){
+ .dialog-content{max-height:calc(100dvh - 122px)}
+ .nav{top:calc(100% + 8px);transform:none;width:42px}
+ #previous{left:0;right:auto}
+ #next{right:0;left:auto}
+}
+
+dialog{width:min(1360px,calc(100vw - 126px))}
+#detail-media{--image-height:74dvh;overflow:auto;overscroll-behavior:contain}
+#detail-media .preview{max-height:var(--image-height);margin:0 auto;cursor:zoom-in}
+#detail-media:has(.preview[data-zoomed]){max-height:var(--image-height)}
+#detail-media .preview[data-zoomed]{max-width:none;max-height:none;margin:0;cursor:zoom-out}
+@media(max-width:1020px){
+ dialog{width:94vw}
+ #detail-media{--image-height:66dvh}
+}
+#detail-media .preview[data-zoomed]{cursor:grab;user-select:none;touch-action:none}
+#detail-media[data-panning] .preview[data-zoomed]{cursor:grabbing}
+</style>
+</head>
+<body>
+<main>
+<header><h1>腰巻きシャツ資料集</h1><p>3Dモデリング用。タグを複数オンにすると、すべてに一致する資料を表示します。</p></header>
+<section aria-label="絞り込み">
+<div id="topics" class="filters"></div>
+<details class="outfits"><summary>衣装グループで絞り込む</summary><div id="outfits" class="filters"></div></details>
+<div class="toolbar"><strong id="count" role="status"></strong><button type="button" id="reset" class="minor">タグをクリア</button><label><input type="checkbox" id="external" checked> 外部サムネイルを表示</label></div>
+</section>
+<section aria-label="資料一覧"><div id="grid" class="grid"></div><p id="empty" hidden>一致する資料がありません。タグを外して絞り込みを調整してください。</p></section>
+<footer>画像付きカードは出典の公開プレビューを外部参照します。読み込みに失敗した場合はカードを開き、詳細の出典リンクから閲覧できます。複数方向を一枚に収めた画像は、向きのタグを併記しています。明らかな斜めは #斜め、向きが確認できない資料は #向き未確認 です。<details><summary>イラストの検索タグ</summary>
+<p>Pixivの検索語 <a href="https://www.pixiv.net/tags/%E8%85%B0%E5%B7%BB%E3%81%8D%E3%82%B7%E3%83%A3%E3%83%84/artworks" target="_blank" rel="noopener noreferrer">腰巻きシャツ ↗</a> · <a href="https://www.pixiv.net/tags/%E8%85%B0%E5%B7%BB%E3%81%8D/artworks" target="_blank" rel="noopener noreferrer">腰巻き ↗</a></p>
+<p>Booru系のタグ <a href="https://safebooru.org/index.php?page=post&amp;s=list&amp;tags=shirt_around_waist" target="_blank" rel="noopener noreferrer">shirt_around_waist ↗</a> · <a href="https://safebooru.org/index.php?page=post&amp;s=list&amp;tags=clothes_around_waist" target="_blank" rel="noopener noreferrer">clothes_around_waist ↗</a></p>
+</details></footer>
+</main>
+<dialog id="detail" aria-labelledby="detail-title">
+<div class="dialog-content">
+<div class="dialog-head"><h2 id="detail-title"></h2><form method="dialog"><button class="minor" aria-label="詳細を閉じる">閉じる</button></form></div>
+<div id="detail-media" title="画像上でホイールを回すとズームできます"></div>
+<p id="position" class="position" aria-live="polite"></p><p id="detail-note"></p><div id="detail-links" class="dialog-links"></div><div id="detail-tags" class="filters dialog-tags"></div>
+</div>
+<button type="button" id="previous" class="minor nav" aria-label="前の資料">‹</button>
+<button type="button" id="next" class="minor nav" aria-label="次の資料">›</button>
+</dialog>
+<script id="catalog" type="application/json">{"groups":{"shirt_001":"赤紺チェックの立体作例","shirt_002":"3Diaのデニム・白無地","shirt_003":"CLO-SET · 赤黒チェック","shirt_004":"FASHIONSNAP · 前多空さん","shirt_005":"クリーム色のドットシャツ","shirt_006":"ボタン留めのデニムシャツ","shirt_007":"Merrick’s Art · 赤青チェック","shirt_008":"three wishes style · 赤黒チェック","shirt_009":"Upstyle · ベルトループを使う結び","shirt_010":"基本の結び方","shirt_011":"Merrick’s Art · 巻き方実演","shirt_015":"kaitosai · VRoid チェック柄","shirt_017":"Ohio State · 布シミュレーション","shirt_025":"#CBK · チェックシャツとすっきりしたトップス","shirt_028":"#CBK · 青ストライプシャツの腰巻き","shirt_031":"#CBK · ピンクのシアーシャツの腰巻き","shirt_039":"Precious · 赤チェックとブルーのショーツ","shirt_042":"Precious · 白シャツの低い結び目","shirt_044":"Precious · ラップスカート状に巻いたシャツ","shirt_045":"Precious · ビッグシャツとワイドデニム","shirt_047":"Precious · 低めに巻いたチェックシャツ","shirt_050":"Precious · 太もも寄りのサイド結び","shirt_051":"Precious · アイボリーの腰巻きとワイドデニム","shirt_052":"Precious · ベージュシャツとハーフパンツ","shirt_053":"Precious · チェックシャツとカーゴデニム","shirt_054":"Precious · ブラウンチェックと黒いデニム","shirt_055":"Precious · ベージュチェックとスラックス","shirt_056":"Precious · ニットの下に巻いたチェックシャツ","shirt_057":"Precious · 白シャツとバギーデニム","shirt_058":"Precious · ジャケットの裾からのぞくネルシャツ","shirt_059":"Precious · ロングコートとベージュチェック","shirt_060":"Precious · イエローのストライプシャツ","shirt_061":"Precious · フレアスカートの上のラップ巻き","shirt_062":"Precious · ライム色のスカートと青ストライプ","shirt_063":"Precious · 水色ストライプのラップ巻き","shirt_064":"Precious · ライトベージュの腰巻き","shirt_065":"Precious · 水色シャツを脇で結ぶ","shirt_066":"Precious · 白いワンピースにブルーシャツ","shirt_067":"#CBK · 上着の下から見える腰巻き","shirt_068":"#CBK · Iラインのワンピースに腰巻き","shirt_069":"#CBK · グレーシャツの腰巻き","shirt_070":"#CBK · 同系色のシャツを重ねた腰巻き","shirt_071":"#CBK · 青いTシャツと青ストライプ","shirt_072":"#CBK · ミニスカートの上の腰巻き","shirt_073":"#CBK · 黒シャツの腰巻き","shirt_074":"#CBK · デニムシャツと腰巻きのチェック","shirt_075":"MONDE · 腰巻きシャツの着用例","shirt_076":"MONDE · デニムシャツの腰巻き","shirt_077":"MONDE · チェックの結び目を脇に寄せる","shirt_078":"MONDE · 青チェックの腰巻き","shirt_079":"MONDE · メンズの無地シャツの腰巻き","shirt_080":"MONDE · 赤のブロックチェック","shirt_081":"MONDE · ギンガムチェックをゆるく巻く","shirt_082":"MONDE · ハーフパンツの上の腰巻き","shirt_083":"MONDE · ミリタリーシャツの下にチェックの腰巻き","shirt_084":"Who What Wear · チェックシャツとシンプルなトップス","shirt_085":"Who What Wear · チェックシャツを腰に加えた街頭写真","shirt_086":"Who What Wear · チェックの腰巻きと重ね着","shirt_087":"Who What Wear · デニムに合わせたチェックの腰巻き","shirt_088":"Who What Wear · Taylor Hill｜腰巻きの着用例","shirt_089":"Who What Wear · Behati Prinsloo｜腰巻きの着用例","shirt_090":"Who What Wear · Rosie Huntington-Whiteley｜腰巻きの着用例","shirt_091":"Who What Wear · Hailey Clauson｜腰巻きの着用例","shirt_092":"Who What Wear · Diana Moldovan｜腰巻きの着用例","shirt_093":"GQ México · メンズの腰巻きシャツ｜街頭写真","shirt_094":"GQ México · ネルシャツの腰巻き｜グランジ","shirt_095":"GQ México · チェックの腰巻き｜ランウェイ","shirt_096":"GQ México · No.21｜ランウェイの腰巻き","shirt_097":"Vogue Italia · ニューヨークの腰巻きシャツ","shirt_098":"Vogue Italia · テーラードスカートとの腰巻き","shirt_099":"Vogue Italia · テーラードスカートの腰巻き｜別の衣装例","shirt_100":"Vogue Italia · ワイドパンツとチェックの腰巻き","shirt_101":"Vogue Italia · Mirja Klein｜ジャケットと腰巻き","shirt_102":"Vogue Italia · 腰位置を変えた巻き方","shirt_103":"Vogue Italia · 斜めに落ちる腰巻き","shirt_104":"黒白ワンピースとチェック","shirt_105":"ヒップを覆う腰巻き","shirt_106":"毛足のあるシャツ","shirt_107":"VIS · ゆうきさんのシアーシャツ","shirt_108":"Triangle · ドール用腰巻きシャツ","shirt_109":"定点観測のチェックシャツ","shirt_110":"灰色ニットとチェック","shirt_111":"愛と荒野 · 母親の衣装設定","shirt_112":"Phil Cho · Maude Dunbarton","shirt_113":"d fashion · Spick & Span","shirt_114":"Vogue · Flannel Shirt Outfits","shirt_115":"Eva · 腰巻きストリート写真","shirt_116":"SOPH. · uniform experiment × Yuni Yoshida","shirt_117":"natural couture · 赤紺チェック","shirt_118":"AS KNOW AS plus · 茶ベージュチェック","shirt_119":"Elle Blogs · L.L. Bean Scotch Plaid","shirt_120":"VAM Hub · Waist tied shirt","shirt_121":"MONDE · モノトーンのメンズ腰巻き","shirt_122":"Leopardness · チェックシャツの腰巻き","shirt_123":"Fashion Hotbox · 赤黒チェック","shirt_124":"macaronk · 夜の街角","shirt_125":"Yu Yin · ナリタタイシン","shirt_126":"crelly · Sulwyn","shirt_127":"Ray · Mabinogi Alter","shirt_128":"283PRODUCTION STYLE · ギンコ・ビローバ"},"items":[{"id":"shirt_124_1","group":"shirt_124","title":"夜の街角｜チェックシャツの腰巻き","note":"夜の街角を描いた一枚。チェック柄の巻き布とスカートの重なりを参照。","source":"https://www.pixiv.net/artworks/128439224","image":"https://safebooru.org//samples/778/sample_ccaca314e4538a9208a0a5363827aa2005ea4482.jpg?5637739=","alternateSource":"https://safebooru.org/index.php?id=5637739&page=post&s=view","tags":["illustration","new","view-unspecified","plaid","on-body","shirt_around_waist","clothes_around_waist","pixiv","shirt_124"]},{"id":"shirt_125_1","group":"shirt_125","title":"ナリタタイシン｜チェックシャツとデニム","note":"チェック柄の巻き布と、デニム・上着との境目を比較できる衣装絵。","source":"https://www.pixiv.net/artworks/90769936","image":"https://safebooru.org//samples/3388/sample_6616d3f47efeac5918a39512289772043a0e9253.jpg?3524871=","alternateSource":"https://safebooru.org/index.php?id=3524871&page=post&s=view","tags":["illustration","new","view-unspecified","plaid","on-body","layering","shirt_around_waist","clothes_around_waist","pixiv","shirt_125"]},{"id":"shirt_126_1","group":"shirt_126","title":"Sulwyn｜赤チェックの腰巻き","note":"立ち姿で、赤いチェックシャツとデニムの重なりを確認できる全身寄りのキャラクター絵。","source":"https://x.com/Sulwyn_VT/status/1996274675370930223","image":"https://safebooru.org//samples/293/sample_fbab30258bc5ee12ff130a66cdeb7c09b2696882.jpg?6308432=","alternateSource":"https://safebooru.org/index.php?id=6308432&page=post&s=view","tags":["illustration","new","view-unspecified","plaid","on-body","layering","shirt_around_waist","clothes_around_waist","shirt_126"]},{"id":"shirt_127_1","group":"shirt_127","title":"Alter｜座った姿勢の腰巻き","note":"座ったときにパンツの上で巻き布がどう重なるかを見るための作例。","source":"https://x.com/LThenray/status/1837675417135993179","image":"https://safebooru.org//images/275/7d0a7d14256dfc8b87c6176caf33ba5a1d205b45.jpg?5891758=","alternateSource":"https://safebooru.org/index.php?id=5891758&page=post&s=view","tags":["illustration","new","view-unspecified","plaid","on-body","layering","seated","shirt_around_waist","clothes_around_waist","shirt_127"]},{"id":"shirt_128_1","group":"shirt_128","title":"ギンコ・ビローバ｜黄チェックの腰巻き","note":"黄チェックがフーディーやショーツと重なる、公式の衣装イラスト。","source":"https://campaign-shinycolors-song-for-prism.idolmaster-official.jp/283prostyle/collection/madoka-ginko/","image":"https://campaign-shinycolors-song-for-prism.idolmaster-official.jp/283prostyle/assets/img/collection/madoka-ginko/style_03.png","tags":["illustration","new","view-unspecified","plaid","on-body","layering","shirt_128"]},{"group":"shirt_051","title":"アイボリーの腰巻きとワイドデニム","tags":["photo","plain","silhouette","shirt_051","layering","on-body","view-unspecified"],"note":"淡い色の身頃がワイドデニムに重なる輪郭。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/4/f/720mw/img_4fc2d7e463e56a6e0aea856fcb90c817249304.jpg","id":"shirt_051_1"},{"group":"shirt_052","title":"ベージュシャツとハーフパンツ","tags":["photo","plain","silhouette","shirt_052","hem","on-body","view-unspecified"],"note":"膝丈のボトムに対するシャツ裾の長さ。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/d/4/720mw/img_d4370475930644d084bcff04d54a8c6f192917.jpg","id":"shirt_052_1"},{"group":"shirt_053","title":"チェックシャツとカーゴデニム","tags":["photo","plaid","silhouette","shirt_053","volume","on-body","view-unspecified"],"note":"幅のあるデニムと腰巻きの張り出しを比較。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/a/5/720mw/img_a5a584b55c0e9f8257f29830281dc42a206479.jpg","id":"shirt_053_1"},{"group":"shirt_054","title":"ブラウンチェックと黒いデニム","tags":["photo","plaid","silhouette","shirt_054","on-body","view-unspecified"],"note":"暗いパンツを背景にチェックの身頃の外形を確認。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/5/a/720mw/img_5ad6a26907395f74ba05bec699b66e36209679.jpg","id":"shirt_054_1"},{"group":"shirt_055","title":"ベージュチェックとスラックス","tags":["photo","plaid","silhouette","shirt_055","layering","view-unspecified"],"note":"軽めの色柄のシャツがスラックスに重なる例。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/5/9/720mw/img_59c146b23f6b00371cbcdc53825e910d193502.jpg","id":"shirt_055_1"},{"group":"shirt_056","title":"ニットの下に巻いたチェックシャツ","tags":["photo","plaid","silhouette","shirt_056","hem","view-unspecified"],"note":"ニットの裾と腰巻きの境目を比較。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/a/0/720mw/img_a03c86a52b2c55aa6426849585f76378229448.jpg","id":"shirt_056_1"},{"group":"shirt_057","title":"白シャツとバギーデニム","tags":["photo","plain","silhouette","shirt_057","on-body","view-unspecified"],"note":"白い同系色の腰巻きで、影とシワに注目。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/5/4/720mw/img_54d293942480f6e3eddae7e555ff2c68180919.jpg","id":"shirt_057_1"},{"group":"shirt_058","title":"ジャケットの裾からのぞくネルシャツ","tags":["photo","plaid","silhouette","shirt_058","hem","volume","flannel","view-unspecified"],"note":"上着を重ねた場合に残るシャツの布量。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/5/2/720mw/img_523318490e523c1732041b8a3db6889a213592.jpg","id":"shirt_058_1"},{"group":"shirt_059","title":"ロングコートとベージュチェック","tags":["photo","plaid","silhouette","shirt_059","view-unspecified"],"note":"コートの開口から見える巻き布と前側の輪郭。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/d/b/720mw/img_dbdcae300736d84c2fe67a3ec6a42e4f194295.jpg","id":"shirt_059_1"},{"group":"shirt_060","title":"イエローのストライプシャツ","tags":["photo","stripe","silhouette","shirt_060","on-body","view-unspecified"],"note":"縞の向きで着用したシャツと巻いたシャツの布面を区別。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/1/0/720mw/img_1046a96155260a23ed81d18dadf81a8b206734.jpg","id":"shirt_060_1"},{"group":"shirt_061","title":"フレアスカートの上のラップ巻き","tags":["photo","plaid","wrap","silhouette","shirt_061","view-unspecified"],"note":"広がるスカートにシャツを重ねる例。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/1/9/720mw/img_19f5ca77d9073d8dccca9ea2c2d5d6c5256635.jpg","id":"shirt_061_1"},{"group":"shirt_062","title":"ライム色のスカートと青ストライプ","tags":["photo","stripe","silhouette","shirt_062","layering","view-unspecified"],"note":"異なる色のボトムとシャツが重なる範囲を確認。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/a/1/720mw/img_a1e8293040a5f4f0085a451505ab1fc3222385.jpg","id":"shirt_062_1"},{"group":"shirt_063","title":"水色ストライプのラップ巻き","tags":["photo","stripe","wrap","silhouette","shirt_063","view-unspecified"],"note":"巻いた身頃を巻きスカートのように重ねる例。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/5/c/720mw/img_5c90fdf6a1d288513e479b7f157c6f34241783.jpg","id":"shirt_063_1"},{"group":"shirt_064","title":"ライトベージュの腰巻き","tags":["photo","plain","silhouette","shirt_064","view-unspecified"],"note":"黒いプリーツを背景にライトベージュの巻き布を確認。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/5/a/720mw/img_5a237c6592e10590795b4109658cc808209246.jpg","id":"shirt_064_1"},{"group":"shirt_065","title":"水色シャツを脇で結ぶ","tags":["photo","knot","side-knot","plain","shirt_065","asymmetry","view-unspecified"],"note":"結び目を脇に寄せて腰のラインを覆う例。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/a/0/720mw/img_a02c8ac15f2e2f414b1599fb88e32980198476.jpg","id":"shirt_065_1"},{"group":"shirt_066","title":"白いワンピースにブルーシャツ","tags":["photo","plain","silhouette","shirt_066","hem","on-body","view-unspecified"],"note":"ブルーの身頃が白い服の上でどこまで垂れるかを見る。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/5/7/720mw/img_575637e9def536cab1319c868837c133214921.jpg","id":"shirt_066_1"},{"group":"shirt_067","title":"上着の下から見える腰巻き","tags":["photo","silhouette","shirt_067","layering","view-unspecified"],"note":"オーバーサイズの上着が腰巻きにかかる位置。","source":"https://magazine.cubki.jp/articles/70577354.html","image":"https://magazine.cubki.jp/wp-content/uploads/2025/11/xlenrhpfa68negohu5ud-1.jpg","id":"shirt_067_1"},{"group":"shirt_068","title":"Iラインのワンピースに腰巻き","tags":["photo","silhouette","shirt_068","volume","on-body","view-unspecified"],"note":"直線的な服の輪郭に巻き布が加える厚み。","source":"https://magazine.cubki.jp/articles/70577354.html","image":"https://magazine.cubki.jp/wp-content/uploads/2025/11/uib6b8eyflyxg5wvogw9.jpg","id":"shirt_068_1"},{"group":"shirt_069","title":"グレーシャツの腰巻き","tags":["photo","plain","silhouette","shirt_069","view-unspecified"],"note":"モノトーンで巻き布の影と輪郭を読む例。","source":"https://magazine.cubki.jp/articles/70577354.html","image":"https://magazine.cubki.jp/wp-content/uploads/2025/11/ykrpfuj7mcj0ogajshxw.jpg","id":"shirt_069_1"},{"group":"shirt_070","title":"同系色のシャツを重ねた腰巻き","tags":["photo","silhouette","shirt_070","layering","view-unspecified"],"note":"同色のレイヤーを布端とシワで区別する例。","source":"https://magazine.cubki.jp/articles/70577354.html","image":"https://magazine.cubki.jp/wp-content/uploads/2025/11/aob9zgljjym4f83lltai.jpg","id":"shirt_070_1"},{"group":"shirt_071","title":"青いTシャツと青ストライプ","tags":["photo","stripe","silhouette","shirt_071","view-unspecified"],"note":"柄を目印に布の曲がりを追う。","source":"https://magazine.cubki.jp/articles/70577354.html","image":"https://magazine.cubki.jp/wp-content/uploads/2026/09/hkyfbhlsluapo8mto0jr.jpg","id":"shirt_071_1"},{"group":"shirt_072","title":"ミニスカートの上の腰巻き","tags":["photo","silhouette","shirt_072","hem","view-unspecified"],"note":"短いボトムの丈に対する巻き布の丈。","source":"https://magazine.cubki.jp/articles/70577354.html","image":"https://magazine.cubki.jp/wp-content/uploads/2026/09/zcwocvmw5b0uazrt0rul.jpg","id":"shirt_072_1"},{"group":"shirt_073","title":"黒シャツの腰巻き","tags":["photo","plain","silhouette","shirt_073","view-unspecified"],"note":"暗色同士の組み合わせの布端と影。","source":"https://magazine.cubki.jp/articles/70577354.html","image":"https://magazine.cubki.jp/wp-content/uploads/2026/09/cz58xkllmg7dpbc5xmuv.jpg","id":"shirt_073_1"},{"group":"shirt_074","title":"デニムシャツと腰巻きのチェック","tags":["photo","plaid","silhouette","shirt_074","on-body","view-unspecified"],"note":"デニムの上着と腰巻きにした別のシャツの境目。","source":"https://magazine.cubki.jp/articles/70577354.html","image":"https://magazine.cubki.jp/wp-content/uploads/2026/09/bso7azyudhatn4b3xywi.jpg","id":"shirt_074_1"},{"group":"shirt_075","title":"腰巻きシャツの着用例","tags":["photo","silhouette","shirt_075","layering","on-body","view-unspecified"],"note":"腰を中心に身頃とボトムの重なりを確認。","source":"https://monde.jp/blog/?p=5285","image":"https://monde.jp/blog/image/corde/2017.05.10/2.jpg","id":"shirt_075_1"},{"group":"shirt_076","title":"デニムシャツの腰巻き","tags":["photo","denim","silhouette","shirt_076","hem","on-body","view-unspecified"],"note":"デニムの布厚と裾の落ち方。","source":"https://monde.jp/blog/?p=5285","image":"https://monde.jp/blog/image/corde/2017.05.10/5.jpg","id":"shirt_076_1"},{"group":"shirt_077","title":"チェックの結び目を脇に寄せる","tags":["photo","plaid","knot","side-knot","shirt_077","volume","asymmetry","view-unspecified"],"note":"脇へずらした結び目と、左右の布量の違い。","source":"https://monde.jp/blog/?p=5285","image":"https://monde.jp/blog/image/corde/2017.05.10/6.jpg","id":"shirt_077_1"},{"group":"shirt_078","title":"青チェックの腰巻き","tags":["photo","plaid","silhouette","shirt_078","layering","on-body","view-unspecified"],"note":"青い格子とデニムの重なり具合。","source":"https://monde.jp/blog/?p=5285","image":"https://monde.jp/blog/image/corde/2017.05.10/8.jpg","id":"shirt_078_1"},{"group":"shirt_079","title":"メンズの無地シャツの腰巻き","tags":["photo","plain","silhouette","shirt_079","view-unspecified"],"note":"無地のため影と輪郭を中心に見られる例。","source":"https://monde.jp/blog/?p=5285","image":"https://monde.jp/blog/image/corde/2017.05.10/9.jpg","id":"shirt_079_1"},{"group":"shirt_080","title":"赤のブロックチェック","tags":["photo","plaid","silhouette","shirt_080","view-unspecified"],"note":"大きな格子の曲がりで布面を追う。","source":"https://monde.jp/blog/?p=5285","image":"https://monde.jp/blog/image/corde/2017.05.10/10.jpg","id":"shirt_080_1"},{"group":"shirt_081","title":"ギンガムチェックをゆるく巻く","tags":["photo","plaid","silhouette","shirt_081","view-unspecified"],"note":"広がりを残した巻き方の例。","source":"https://monde.jp/blog/?p=5285","image":"https://monde.jp/blog/image/corde/2017.05.10/11.jpg","id":"shirt_081_1"},{"group":"shirt_082","title":"ハーフパンツの上の腰巻き","tags":["photo","silhouette","shirt_082","on-body","view-unspecified"],"note":"短いパンツにかかるシャツの長さ。","source":"https://monde.jp/blog/?p=5285","image":"https://monde.jp/blog/image/corde/2017.05.10/12.jpg","id":"shirt_082_1"},{"group":"shirt_083","title":"ミリタリーシャツの下にチェックの腰巻き","tags":["photo","plaid","silhouette","shirt_083","layering","volume","view-unspecified"],"note":"上着の下で巻き布が作る厚み。","source":"https://monde.jp/blog/?p=5285","image":"https://monde.jp/blog/image/corde/2017.05.10/13.jpg","id":"shirt_083_1"},{"group":"shirt_084","title":"チェックシャツとシンプルなトップス","tags":["photo","plaid","silhouette","shirt_084","layering","on-body","view-unspecified"],"note":"腰に巻いたチェックの輪郭とパンツへの重なり。","source":"https://www.whowhatwear.com/fashion/trends/plaid-shirt-waist-styling-trend","image":"https://cdn.mos.cms.futurecdn.net/QdPugFnFjqHLVn9sQGe6RD.jpg","id":"shirt_084_1"},{"group":"shirt_085","title":"チェックシャツを腰に加えた街頭写真","tags":["photo","plaid","silhouette","shirt_085","on-body","view-unspecified"],"note":"格子に沿って腰から伸びる布面を見る。","source":"https://www.whowhatwear.com/fashion/trends/plaid-shirt-waist-styling-trend","image":"https://cdn.mos.cms.futurecdn.net/CvPCQuzw5hJ5bqXgyPfBqD.jpg","id":"shirt_085_1"},{"group":"shirt_086","title":"チェックの腰巻きと重ね着","tags":["photo","plaid","silhouette","shirt_086","layering","view-unspecified"],"note":"上着と腰巻きが重なるスタイルを比較。","source":"https://www.whowhatwear.com/fashion/trends/plaid-shirt-waist-styling-trend","image":"https://cdn.mos.cms.futurecdn.net/aUuuZ4UApBMwuhU2WHSNzC.jpg","id":"shirt_086_1"},{"group":"shirt_087","title":"デニムに合わせたチェックの腰巻き","tags":["photo","plaid","silhouette","shirt_087","layering","on-body","view-unspecified"],"note":"デニムに重なる色を抑えたチェック柄。","source":"https://www.whowhatwear.com/fashion/trends/plaid-shirt-waist-styling-trend","image":"https://cdn.mos.cms.futurecdn.net/bC3UpneytaguWVWcqQkhAD.jpg","id":"shirt_087_1"},{"group":"shirt_088","title":"Taylor Hill｜腰巻きの着用例","tags":["photo","silhouette","shirt_088","on-body","view-unspecified"],"note":"腰に巻いたシャツとボトムの輪郭を比較。写真は Getty Images。","source":"https://www.whowhatwear.com/how-to-tie-a-shirt-around-your-waist","image":"https://cdn.mos.cms.futurecdn.net/whowhatwear/posts/234021/how-to-tie-a-shirt-around-your-waist-234021-1504029931729-image.jpg","id":"shirt_088_1"},{"group":"shirt_089","title":"Behati Prinsloo｜腰巻きの着用例","tags":["photo","silhouette","shirt_089","hem","on-body","view-unspecified"],"note":"巻く位置と身頃が下がる量を観察。写真は Splash News。","source":"https://www.whowhatwear.com/how-to-tie-a-shirt-around-your-waist","image":"https://cdn.mos.cms.futurecdn.net/whowhatwear/posts/234021/how-to-tie-a-shirt-around-your-waist-234021-1504029934353-image.jpg","id":"shirt_089_1"},{"group":"shirt_090","title":"Rosie Huntington-Whiteley｜腰巻きの着用例","tags":["photo","silhouette","shirt_090","hem","layering","on-body","view-unspecified"],"note":"腰回りの重なりと裾位置を比較。写真は AKM-GSI。","source":"https://www.whowhatwear.com/how-to-tie-a-shirt-around-your-waist","image":"https://cdn.mos.cms.futurecdn.net/whowhatwear/posts/234021/how-to-tie-a-shirt-around-your-waist-234021-1504029937930-image.jpg","id":"shirt_090_1"},{"group":"shirt_091","title":"Hailey Clauson｜腰巻きの着用例","tags":["photo","silhouette","shirt_091","volume","on-body","view-unspecified"],"note":"巻いたシャツの体に対するボリュームを確認。写真は AKM-GSI。","source":"https://www.whowhatwear.com/how-to-tie-a-shirt-around-your-waist","image":"https://cdn.mos.cms.futurecdn.net/whowhatwear/posts/234021/how-to-tie-a-shirt-around-your-waist-234021-1504143131377-image.jpg","id":"shirt_091_1"},{"group":"shirt_092","title":"Diana Moldovan｜腰巻きの着用例","tags":["photo","silhouette","shirt_092","asymmetry","on-body","view-unspecified"],"note":"着用状態で左右の布の長さを比較。写真は Getty Images。","source":"https://www.whowhatwear.com/how-to-tie-a-shirt-around-your-waist","image":"https://cdn.mos.cms.futurecdn.net/whowhatwear/posts/234021/how-to-tie-a-shirt-around-your-waist-234021-1504029940269-image.jpg","id":"shirt_092_1"},{"group":"shirt_093","title":"メンズの腰巻きシャツ｜街頭写真","tags":["photo","silhouette","shirt_093","hem","volume","on-body","view-unspecified"],"note":"全身に対する巻き位置と裾の分量。","source":"https://www.gq.com.mx/articulo/como-usar-camisa-amarrada-en-la-cintura-tendencia-anos-90","image":"https://media.gq.com.mx/photos/646d3eed2f52f48c1a2e0a93/4%3A3/w_2560%2Cc_limit/como-usar-camisa-amarrada-en-la-cintura-tendencia-anos-90.jpg","id":"shirt_093_1"},{"group":"shirt_094","title":"ネルシャツの腰巻き｜グランジ","tags":["photo","plaid","silhouette","shirt_094","flannel","view-unspecified"],"note":"腰に巻いたフランネルの格子と輪郭。","source":"https://www.gq.com.mx/articulo/como-usar-camisa-amarrada-en-la-cintura-tendencia-anos-90","image":"https://media.gq.com.mx/photos/646d3c3ac6bd5f429416c530/master/w_1600%2Cc_limit/camisa-amarrada-en-la-cintura.jpg","id":"shirt_094_1"},{"group":"shirt_095","title":"チェックの腰巻き｜ランウェイ","tags":["photo","plaid","silhouette","shirt_095","volume","view-unspecified"],"note":"複数の衣服を重ねた時の腰の布量を比較。","source":"https://www.gq.com.mx/articulo/como-usar-camisa-amarrada-en-la-cintura-tendencia-anos-90","image":"https://media.gq.com.mx/photos/646d3e442f52f48c1a2e0a91/master/w_1600%2Cc_limit/camisa-amarrada-en-la-cintura-cuadros.jpg","id":"shirt_095_1"},{"group":"shirt_096","title":"No.21｜ランウェイの腰巻き","tags":["photo","silhouette","shirt_096","layering","on-body","view-unspecified"],"note":"ランウェイ衣装の巻き位置と布の重なり。","source":"https://www.gq.com.mx/articulo/como-usar-camisa-amarrada-en-la-cintura-tendencia-anos-90","image":"https://media.gq.com.mx/photos/646d3c392f52f48c1a2e0a8f/master/w_1600%2Cc_limit/como-usar-camisa-amarrada-en-la-cintura-tendencia-anos-90-desfile.jpg","id":"shirt_096_1"},{"group":"shirt_097","title":"ニューヨークの腰巻きシャツ","tags":["photo","silhouette","shirt_097","on-body","view-unspecified"],"note":"街頭写真で、巻き布が体から離れる位置を確認。","source":"https://www.vogue.it/article/camicia-annodata-in-vita-tendenza-styling-outfit","image":"https://compass-media.vogue.it/photos/68cac4253a9ccacd8347094b/master/w_1600%2Cc_limit/GettyImages-2232452697.jpg","id":"shirt_097_1"},{"group":"shirt_098","title":"テーラードスカートとの腰巻き","tags":["photo","plaid","silhouette","shirt_098","layering","view-unspecified"],"note":"すっきりしたスカートに重なる巻き布。","source":"https://www.vogue.it/article/camicia-annodata-in-vita-tendenza-styling-outfit","image":"https://compass-media.vogue.it/photos/68caa843788a0873988ac644/master/w_1600%2Cc_limit/New%2520York%2520str%2520S26%25200777.jpg","id":"shirt_098_1"},{"group":"shirt_099","title":"テーラードスカートの腰巻き｜別の衣装例","tags":["photo","plaid","silhouette","shirt_099","hem","on-body","view-unspecified"],"note":"スカートのラインに対するシャツの裾の位置。","source":"https://www.vogue.it/article/camicia-annodata-in-vita-tendenza-styling-outfit","image":"https://compass-media.vogue.it/photos/68caa843788a0873988ac645/master/w_1600%2Cc_limit/New%2520York%2520str%2520S26%25201495.jpg","id":"shirt_099_1"},{"group":"shirt_100","title":"ワイドパンツとチェックの腰巻き","tags":["photo","plaid","silhouette","shirt_100","volume","on-body","view-unspecified"],"note":"幅のあるパンツと腰巻きの横への広がりを比較。","source":"https://www.vogue.it/article/camicia-annodata-in-vita-tendenza-styling-outfit","image":"https://compass-media.vogue.it/photos/68caa843788a0873988ac648/2%3A3/w_1600%2Cc_limit/New%2520York%2520str%2520S26%25201312.jpg","id":"shirt_100_1"},{"group":"shirt_101","title":"Mirja Klein｜ジャケットと腰巻き","tags":["photo","silhouette","shirt_101","layering","on-body","view-unspecified"],"note":"ジャケットやパンツと腰巻きが重なる位置を確認。","source":"https://www.vogue.it/article/camicia-annodata-in-vita-tendenza-styling-outfit","image":"https://compass-media.vogue.it/photos/68caaf815bced1caf898b25f/2%3A3/w_1600%2Cc_limit/GettyImages-2234199954.jpg","id":"shirt_101_1"},{"group":"shirt_102","title":"腰位置を変えた巻き方","tags":["photo","knot","silhouette","shirt_102","view-unspecified"],"note":"位置を調整した巻き方の節に掲載。","source":"https://www.vogue.it/article/camicia-annodata-in-vita-tendenza-styling-outfit","image":"https://compass-media.vogue.it/photos/68caa843788a0873988ac649/master/w_1600%2Cc_limit/New%2520York%2520str%2520S26%25201353.jpg","id":"shirt_102_1"},{"group":"shirt_103","title":"斜めに落ちる腰巻き","tags":["photo","knot","wrap","silhouette","shirt_103","asymmetry","view-unspecified"],"note":"脇で斜めに結ぶ巻き方の節に掲載。","source":"https://www.vogue.it/article/camicia-annodata-in-vita-tendenza-styling-outfit","image":"https://compass-media.vogue.it/photos/68cabc89f6364eba4e1912c3/master/w_1600%2Cc_limit/download.jpeg","id":"shirt_103_1"},{"group":"shirt_104","title":"黒白のワンピースにチェックの腰巻き","tags":["photo","plaid","silhouette","shirt_104","layering","on-body","view-unspecified"],"note":"ワンピースに対する格子柄の身頃の重なり。","source":"https://lovemaegan.com/obsessed-black-white-racerback-tank-dress-targetstyle/","image":"https://lovemaegan.com/wp-content/uploads/targetstyle-dress-alexander-wang-bag-plaid-flannel-waist1.jpg","id":"shirt_104_1"},{"group":"shirt_104","title":"チェックの腰巻きとレーサーバック","tags":["photo","plaid","silhouette","shirt_104","back","on-body"],"note":"同じ着用例で、シャツの外形を確認。","source":"https://lovemaegan.com/obsessed-black-white-racerback-tank-dress-targetstyle/","image":"https://lovemaegan.com/wp-content/uploads/TargetStyle-Racerback-dress-birkenstocks-flannel-shirt1.jpg","id":"shirt_104_2"},{"group":"shirt_104","title":"フランネルの腰巻き｜布の重なり","tags":["photo","plaid","silhouette","shirt_104","layering","flannel","view-unspecified"],"note":"腰まわりのレイヤーを比較。","source":"https://lovemaegan.com/obsessed-black-white-racerback-tank-dress-targetstyle/","image":"https://lovemaegan.com/wp-content/uploads/black-and-white-targetStyle-dress-flannel-waist-shirt2.jpg","id":"shirt_104_3"},{"group":"shirt_105","title":"ヒップを覆う腰巻き｜全体","tags":["photo","silhouette","shirt_105","on-body","view-unspecified"],"note":"ウエストのゴムとヒップを覆うために巻いたシャツ。","source":"https://www.junonline.jp/outlet/styling/470082","image":"https://image.jadore-jun.jp/spinoza/entry/image/2026/02/12/698d662f63f23_1.jpg","id":"shirt_105_1"},{"group":"shirt_105","title":"ヒップを覆う腰巻き｜着用カット 2","tags":["photo","silhouette","shirt_105","volume","on-body","view-unspecified"],"note":"同じスタッフスナップで腰回りに残る布量を比較。","source":"https://www.junonline.jp/outlet/styling/470082","image":"https://image.jadore-jun.jp/spinoza/entry/image/2026/02/12/698d662f63f73_1.jpg","id":"shirt_105_2"},{"group":"shirt_106","title":"毛足のあるシャツを腰巻き｜全体","tags":["photo","silhouette","shirt_106","on-body","view-unspecified"],"note":"表面に毛足のあるシャツの腰巻き。","source":"https://www.junonline.jp/vis/styling/508455","image":"https://image.jadore-jun.jp/spinoza/entry/image/2026/09/08/6a9fb103ab652_1.jpg","id":"shirt_106_1"},{"group":"shirt_106","title":"毛足のあるシャツ｜着用カット 2","tags":["photo","silhouette","shirt_106","volume","on-body","view-unspecified"],"note":"同じシャツの布の厚みと輪郭を比較。","source":"https://www.junonline.jp/vis/styling/508455","image":"https://image.jadore-jun.jp/spinoza/entry/image/2026/09/08/6a9fb103ab693_1.jpg","id":"shirt_106_2"},{"group":"shirt_107","title":"シアーシャツの腰巻き｜セットアップ","tags":["photo","lightweight","silhouette","shirt_107","layering","view-unspecified"],"note":"薄手のシャツをジャケットの下の腰に巻いた例。","source":"https://www.junonline.jp/vis/styling/508756","image":"https://image.jadore-jun.jp/spinoza/entry/image/2026/09/09/6aa1111859c7c_1.jpg","id":"shirt_107_1"},{"group":"shirt_108","title":"ドール衣装｜腰巻きシャツの製品写真","tags":["photo","silhouette","shirt_108","garment-only","view-unspecified"],"note":"実物のドール用衣装。縮尺の異なる布の腰巻きとして参照。","source":"https://booth.pm/en/items/7326470","image":"https://booth.pximg.net/16d9371d-e545-44d1-9405-c07bc34f2a64/i/7326470/1293ff38-1d5f-48a0-a928-f4ea6a430fb7_base_resized.jpg","id":"shirt_108_1"},{"group":"shirt_109","title":"チェックシャツの腰巻き｜定点スナップ","tags":["photo","plaid","silhouette","shirt_109","on-body","view-unspecified"],"note":"全身で腰に巻いた位置を確認。","source":"https://www.web-across.com/observe/srnrj20000020uan.html","image":"https://www.web-across.com/observe/srnrj20000020uan-img/srnrj20000020uc9.jpg","id":"shirt_109_1"},{"group":"shirt_109","title":"チェックシャツの腰巻き｜同じ衣装の別カット","tags":["photo","plaid","silhouette","shirt_109","on-body","view-unspecified"],"note":"同じ取材衣装の別カットで格子と巻き布を比較。","source":"https://www.web-across.com/observe/srnrj20000020uan.html","image":"https://www.web-across.com/observe/srnrj20000020uan-img/srnrj20000020uca.jpg","id":"shirt_109_2"},{"group":"shirt_110","title":"グレーのニットとチェックの腰巻き","tags":["photo","plaid","silhouette","shirt_110","view-unspecified"],"note":"ニットの下で巻いたチェックシャツの輪郭。","source":"https://www.pexels.com/photo/young-woman-in-a-gray-sweater-and-a-plaid-shirt-tied-around-her-waist-18900675/","image":"https://images.pexels.com/photos/18900675/pexels-photo-18900675.jpeg?auto=compress&w=1200","id":"shirt_110_1"},{"group":"shirt_110","title":"チェックの腰巻き｜石壁の前の別カット","tags":["photo","plaid","silhouette","shirt_110","view-unspecified"],"note":"同じ撮影シリーズの立ち姿。","source":"https://www.pexels.com/photo/model-in-a-gray-sweater-and-a-plaid-shirt-tied-around-her-waist-in-the-gate-of-the-old-building-18900677/","image":"https://images.pexels.com/photos/18900677/pexels-photo-18900677.jpeg?auto=compress&w=1200","id":"shirt_110_2"},{"group":"shirt_110","title":"チェックの腰巻き｜路地での着用","tags":["photo","plaid","silhouette","shirt_110","volume","on-body","view-unspecified"],"note":"同じ衣装の別カットで布量を比較。","source":"https://www.pexels.com/photo/woman-posing-in-gray-sweater-and-checked-shirt-wrapped-around-her-waist-18898365/","image":"https://images.pexels.com/photos/18898365/pexels-photo-18898365.jpeg?auto=compress&w=1200","id":"shirt_110_3"},{"group":"shirt_110","title":"チェックの腰巻き｜アイビーのある路地","tags":["photo","plaid","silhouette","shirt_110","view-unspecified"],"note":"同じチェックシャツの別カット。","source":"https://www.pexels.com/photo/woman-posing-in-gray-oversized-sweater-and-checked-shirt-wrapped-around-her-waist-18887983/","image":"https://images.pexels.com/photos/18887983/pexels-photo-18887983.jpeg?auto=compress&w=1200","id":"shirt_110_4"},{"group":"shirt_111","title":"母親の衣装設定｜前・横・後ろ","tags":["illustration","front","back","side","knot","drape","multiview","shirt_111","hem","volume","on-body"],"note":"明るいシャツを腰に結んだ同一衣装の三面図。側面の厚みと背面の身頃を比較。","source":"https://www.taptap.cn/moment/253219369218212677","image":"https://img2-tc.tapimg.com/moment/etag/FqHeQpaTRevQ4T_I-L7xuh1gJqvj.jpg/_tap_ugc.jpg","id":"shirt_111_1"},{"group":"shirt_112","title":"Maude Dunbarton｜チェックの腰巻き","tags":["illustration","front","plaid","silhouette","shirt_112","on-body"],"note":"人体比率の分かる全身イラスト。デニムのジャケットと腰に巻いたチェックシャツの境界を確認。","source":"https://www.philchoart.com/featured/2026/4/15/maude-dunbarton-earth-27-oc-commission","image":"https://images.squarespace-cdn.com/content/v1/5133bc80e4b0c6fb04dcd6c4/31a2db09-94fb-4b37-ac3d-5a9d34829887/maude_dunbarton_e27_web.jpg?format=750w","id":"shirt_112_1"},{"group":"shirt_113","title":"オックスシャツの腰巻き","tags":["photo","plain","silhouette","shirt_113","oxford","view-unspecified"],"note":"薄いブルーのオックスシャツを腰に巻いた製品スタイリング。","source":"https://dfashion.docomo.ne.jp/commodity/SBYC2026D/SP3034EW008911/","image":"https://sc3.locondo.jp/contents/commodity_image/SP/SP3034EW008911_13_l.jpg","id":"shirt_113_1"},{"group":"shirt_114","title":"フランネルの腰巻き｜ストリート","tags":["photo","plaid","silhouette","shirt_114","flannel","on-body","view-unspecified"],"note":"格子柄のシャツを腰に巻いたストリート写真。","source":"https://www.vogue.com/article/flannel-shirt-outfits","image":"https://assets.vogue.com/photos/68e840e9f7287bc380cff634/master/w_2560%2Cc_limit/image28.png","id":"shirt_114_1"},{"group":"shirt_115","title":"街頭のシャツ腰巻き｜歩行時","tags":["photo","silhouette","shirt_115","layering","on-body","view-unspecified"],"note":"歩行中の着用例で、ボトムに重なる巻き布の輪郭を確認。","source":"https://eva.vn/thoi-trang/sao-viet-dao-pho-cuc-chat-voi-mot-ao-buoc-eo-c36a202267.html","image":"https://cdn.eva.vn/upload/4-2014/images/2014-10-31/1414728532-3.jpg","id":"shirt_115_1"},{"group":"shirt_116","title":"白黒チェックとライトデニム","tags":["photo","plaid","silhouette","shirt_116","on-body","view-unspecified"],"note":"淡い色のデニムの上に巻いた白黒チェックのシルエット。","source":"https://www.soph.net/shop/pages/ue_frgmt_yuniyoshida.aspx","image":"https://www.soph.net/img/usr/visual/feature_ue_frgmt_yuniyoshida_11.jpg","id":"shirt_116_1"},{"group":"shirt_117","title":"赤いニットと赤紺チェックの腰巻き","tags":["photo","front","plaid","silhouette","shirt_117","hem"],"note":"裾の色とジーンズの境目が読みやすい製品スタイリング。","source":"https://wear.jp/item/5055422/","image":"https://c.imgz.jp/966/5358966/5358966B_b_09_500.jpg","id":"shirt_117_1"},{"group":"shirt_118","title":"ブラウンチェックとワイドジーンズ","tags":["photo","plaid","silhouette","shirt_118","layering","view-unspecified"],"note":"幅のあるジーンズに重なる茶色の布の輪郭。","source":"https://wear.jp/item/81924452/","image":"https://c.imgz.jp/659/87320659/87320659b_b_06_500.jpg","id":"shirt_118_1"},{"group":"shirt_119","title":"赤白緑のチェックと細身デニム","tags":["photo","plaid","silhouette","shirt_119","on-body","view-unspecified"],"note":"巻き布の外形を細身のデニムとの対比で確認。","source":"https://www.elleblogs.com/2014/10/plaid-ll-bean-scotch-plaid-shirt-review.html","image":"https://4.bp.blogspot.com/-Nc5HUgp30Vg/VE293O0TZrI/AAAAAAAAW98/28kxMmETnDo/s1600/Denim%2B%2B%2BChristmas%2BPlaid.jpg","id":"shirt_119_1"},{"group":"shirt_120","title":"腰巻き用の単体3D衣装","tags":["3d","silhouette","shirt_120","garment-only","view-unspecified"],"note":"腰巻き用に作られた衣装の製品ギャラリー。一覧用アイコンではなく掲載作例。","source":"https://hub.virtamate.com/resources/waist-tied-shirt.21197/","image":"https://hub.virtamate.com/attachments/1658495194-jpg.141418/","id":"shirt_120_1"},{"group":"shirt_121","title":"歩行中のシャツ腰巻き","tags":["photo","silhouette","shirt_121","hem","view-unspecified"],"note":"歩くときの腰巻きの位置と、脚に対して裾が開く幅を確認。","source":"https://monde.jp/blog/?p=5285","image":"https://monde.jp/blog/image/corde/2017.05.10/7.jpg","id":"shirt_121_1"},{"group":"shirt_122","title":"チェックの腰巻き｜街頭スナップ","tags":["photo","plaid","silhouette","shirt_122","on-body","view-unspecified"],"note":"チェック柄が布の屈曲で曲がる位置を観察。","source":"https://leopardness.blogspot.com/2013/12/dica-camisa-xadrez-amarrada.html","image":"https://3.bp.blogspot.com/-JP0dWy6D668/UpyL9beSNaI/AAAAAAAACQQ/3wfryLPejcM/s640/ok1.jpg","id":"shirt_122_1"},{"group":"shirt_123","title":"レギンスに重なる赤黒チェック","tags":["photo","front","plaid","silhouette","shirt_123","layering","volume","flannel","on-body"],"note":"身体に沿うレギンスを背景に、巻いたフランネルの厚みを見る。","source":"https://id.pinterest.com/pin/yes-i-tied-it-around-my-waist-fashion-hotbox--124482377174894251/","image":"https://i.pinimg.com/originals/9d/8d/9f/9d8d9f3264b00275d2359ca160aa1b57.jpg","id":"shirt_123_1"},{"id":"shirt_025_1","group":"shirt_025","title":"チェックシャツとすっきりしたトップス","tags":["photo","plaid","shirt_025","view-unspecified"],"note":"格子柄を目印に、腰の周りで生地が曲がる位置を追えます。","source":"https://magazine.cubki.jp/articles/70577354.html","image":"https://magazine.cubki.jp/wp-content/uploads/2025/11/m4csymskhbbi23comdsf.jpg"},{"id":"shirt_028_1","group":"shirt_028","title":"青ストライプシャツの腰巻き","tags":["photo","shirt_028","stripe","view-unspecified"],"note":"ストライプで布の曲がりと向きを追えます。","source":"https://magazine.cubki.jp/articles/70577354.html","image":"https://magazine.cubki.jp/wp-content/uploads/2025/11/c5ezeiolmy10pygpatjr.jpg"},{"id":"shirt_031_1","group":"shirt_031","title":"ピンクのシアーシャツの腰巻き","tags":["photo","shirt_031","lightweight","layering","view-unspecified"],"note":"薄手生地の透けと重なり。","source":"https://magazine.cubki.jp/articles/70577354.html","image":"https://magazine.cubki.jp/wp-content/uploads/2025/11/u0ae72wacu2xew3rnusz.jpg"},{"id":"shirt_039_1","group":"shirt_039","title":"赤チェックとブルーのショーツ","tags":["photo","plaid","shirt_039","hem","view-unspecified"],"note":"裾の輪郭を赤と青の境界で追いやすい例。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/1/b/720mw/img_1b5f2151b183fa654a97162e6c8b6f40211807.jpg"},{"id":"shirt_042_1","group":"shirt_042","title":"白シャツの低い結び目","tags":["photo","knot","shirt_042","low","plain","view-unspecified"],"note":"腰より低い位置で結んだ例。袖と下に落ちる布を比較。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/f/e/720mw/img_fed4973a2471f6bc64bfe725771ae644181963.jpg"},{"id":"shirt_044_1","group":"shirt_044","title":"ラップスカート状に巻いたシャツ","tags":["photo","plaid","shirt_044","wrap","on-body","view-unspecified"],"note":"左右の身頃をスカート状に重ねた着用例。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/1/a/720mw/img_1ac863eea907970f3309667157c1df45320133.jpg"},{"id":"shirt_045_1","group":"shirt_045","title":"ビッグシャツとワイドデニム","tags":["photo","shirt_045","volume","on-body","view-unspecified"],"note":"大きめの身頃による布のボリューム。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/5/a/720mw/img_5a7ee09a53fd514d81b949d79ba0f370238809.jpg"},{"id":"shirt_047_1","group":"shirt_047","title":"低めに巻いたチェックシャツ","tags":["photo","plaid","shirt_047","low","hem","view-unspecified"],"note":"腰より低い位置から垂れる裾の丈感。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/2/4/720mw/img_24f6126641b80452a99993736e71174e198130.jpg"},{"id":"shirt_050_1","group":"shirt_050","title":"太もも寄りのサイド結び","tags":["photo","knot","plaid","shirt_050","side-knot","volume","asymmetry","view-unspecified"],"note":"結び位置を脇にずらした例。前後への布量の偏りを見る。","source":"https://precious.jp/articles/-/56988","image":"https://precious.ismcdn.jp/mwimgs/1/0/720mw/img_10ab1e4188f2f5aede161266548925df179608.jpg"},{"id":"shirt_001_1","group":"shirt_001","title":"赤紺チェック｜前後の比較","tags":["front","back","knot","drape","plaid","multiview","3d","shirt_001","garment-only","hem"],"note":"袖の結びと、背面身頃が裾に向かって広がる形を比較。","source":"https://www.fab.com/listings/1b224274-da40-46ce-8952-db488cf8eb86?lang=es-mx","image":"https://p.turbosquid.com/ts-thumb/Lq/J97UZt/AT/3/jpg/1730414493/1920x1080/fit_q87/a78327b37145167a2e0b9ecfe1e7f985805641be/3.jpg","alternateSource":"https://www.turbosquid.com/3d-models/waist-tied-shirt-119-3d-model-2299773"},{"id":"shirt_001_2","group":"shirt_001","title":"赤紺チェック｜単体レンダー 02","tags":["plaid","3d","shirt_001","garment-only","view-unspecified"],"note":"格子の曲がりで布面のねじれとシワを追う。","source":"https://www.fab.com/listings/1b224274-da40-46ce-8952-db488cf8eb86?lang=es-mx","image":"https://p.turbosquid.com/ts-thumb/Lq/J97UZt/so/2/jpg/1730414493/1920x1080/fit_q87/9500e3b57cada3ab1b73828888d0f5e2912f7078/2.jpg","alternateSource":"https://www.turbosquid.com/3d-models/waist-tied-shirt-119-3d-model-2299773"},{"id":"shirt_002_1","group":"shirt_002","title":"デニム｜正面の袖結び","tags":["front","knot","cuff","3d","shirt_002","garment-only"],"note":"結びの中心と、そこから下がる左右の袖口。","source":"https://www.turbosquid.com/3d-models/shirt-tied-around-waist-3d-model-1785023","image":"https://p.turbosquid.com/ts-thumb/F5/zS2Ajs/dp/preview1/png/1631200017/1920x1080/fit_q87/c624e32c852e5bd72452b7cce1e4a0202af4db7b/preview1.jpg"},{"id":"shirt_002_2","group":"shirt_002","title":"デニム｜着用時の前後","tags":["front","back","drape","multiview","3d","shirt_002","hem","layering","volume","on-body"],"note":"パンツに重なる背面と、着用時の腰の厚み。","source":"https://www.turbosquid.com/3d-models/shirt-tied-around-waist-3d-model-1785023","image":"https://p.turbosquid.com/ts-thumb/F5/zS2Ajs/RQ/preview2/jpg/1770940552/1920x1080/fit_q87/55493406543f94e81ace954b3754d277d4bb96a1/preview2.jpg"},{"id":"shirt_002_3","group":"shirt_002","title":"白無地｜多面レンダー","tags":["front","back","side","drape","multiview","3d","shirt_002","garment-only","hem","volume"],"note":"柄のない状態で折れ・影・輪郭を確認。CGTraderとTurboSquidの同じ3Dia製品を同一IDで収録。 左右の形を詰める際は、商品ギャラリーの別カットで巻き付けと裾の厚みを比較。","source":"https://www.cgtrader.com/3d-models/character/clothing/shirt-tied-around-waist","image":"https://img-new.cgtrader.com/items/3260362/d65c432c0d/shirt-tied-around-waist-3d-model-low-poly-obj-fbx.jpg"},{"id":"shirt_003_1","group":"shirt_003","title":"赤黒チェック｜ショートパンツに着用","tags":["front","knot","plaid","3d","shirt_003","layering","on-body"],"note":"腰の前で重なる袖と、短いパンツにかかる身頃。","source":"https://connect.clo-set.com/detail/b42b1336ccfc4dbd90f608de1ce0996a","image":"https://storagefiles.clo-set.com/public/marketplace/202506/b42b1336ccfc4dbd90f608de1ce0996a/thumbnail/814.png?f=webp&fit=scale-down&resize=1&w=1200"},{"id":"shirt_004_1","group":"shirt_004","title":"青チェック｜腰まわりの寄り","tags":["knot","plaid","detail","photo","shirt_004","view-unspecified"],"note":"格子の変形と、袖が交差する位置に注目。","source":"https://www.fashionsnap.com/streetstyle/2023-09-07/323528/","image":"https://fashionsnap-assets.com/asset/format%3Dauto%2Cwidth%3D1088/streetstyle/images/2023/08/08-23-23-41-01-005-1.jpg"},{"id":"shirt_005_1","group":"shirt_005","title":"ボタン1つ留め｜前の結びとカフス","tags":["front","knot","cuff","detail","photo","shirt_005"],"note":"画像一覧のカフスにピンバッジが写るカット。高い位置で結んだ例。","source":"https://otonamuse.jp/fashion/223654/page2/","image":"https://otonamuse.jp/wp/wp-content/uploads/2026/07/MENSSNAP45_T-shirt_otonamuse_1-960x1280.jpg"},{"id":"shirt_005_2","group":"shirt_005","title":"ボタン1つ留め｜背面の開き","tags":["back","drape","buttons","photo","shirt_005","hem"],"note":"画像一覧の第1ボタンのカット。前身頃を外に向ける巻き方で、背面に開きができる。","source":"https://otonamuse.jp/fashion/223654/page2/","image":"https://otonamuse.jp/wp/wp-content/uploads/2026/07/MENSSNAP45_T-shirt_otonamuse_2-960x1280.jpg"},{"id":"shirt_006_1","group":"shirt_006","title":"デニム｜固結びの厚み","tags":["front","knot","detail","photo","shirt_006","volume"],"note":"本文の「固結び」の写真。布が集まる量を観察。","source":"https://ameblo.jp/jphotostyling/entry-12026146221.html","image":null},{"id":"shirt_006_2","group":"shirt_006","title":"デニム｜前ボタンを留めた背面","tags":["back","drape","buttons","photo","shirt_006","hem"],"note":"本文の「後ろはこんな感じ」の写真。前立てを留めた状態で背面に落ちる布を確認。","source":"https://ameblo.jp/jphotostyling/entry-12026146221.html","image":null},{"id":"shirt_007_1","group":"shirt_007","title":"赤青チェック｜デニムとの着用写真","tags":["front","knot","plaid","photo","shirt_007","on-body"],"note":"記事冒頭の連続写真。腰への密着と結び目の位置を確認。撮影は rad and happy。","source":"https://www.merricksart.com/mad-for-plaid-three-ways-to-dress-up/","image":"https://www.merricksart.com/wp-content/uploads/2015/07/PhotoJul142C23832AM-1-683x1024.jpg"},{"id":"shirt_008_1","group":"shirt_008","title":"赤黒チェック｜立ち姿","tags":["front","plaid","photo","shirt_008","volume","on-body"],"note":"細身のデニムを着用した際の布の張り出し。","source":"https://twikoff.wordpress.com/2013/12/05/outfit-of-the-day-lumberjack/","image":"https://twikoff.wordpress.com/wp-content/uploads/2013/12/20131207-195332.jpg"},{"id":"shirt_009_1","group":"shirt_009","title":"ベルトループを使った前結び","tags":["front","knot","detail","method","plaid","photo","shirt_009"],"note":"袖をベルトループに通して保持するアレンジ。袖同士の結びだけの例と比較できる。","source":"https://www.upstyledaily.com/diy/casual-wear/blouses-shirts/tie-your-flannel-like-this-instead-44472322","image":"https://cdn-fastly.upstyledaily.com/media/2023/04/17/8416369/tie-your-flannel-like-this-instead.jpg?nocrop=1&size=720x845"},{"id":"shirt_010_1","group":"shirt_010","title":"巻き方の手順｜基本結び","tags":["front","knot","method","photo","shirt_010","volume"],"note":"基本手順と、1回結び・2回結びで変わる厚みを参照。","source":"https://monde.jp/blog/?p=13563","image":null},{"id":"shirt_010_2","group":"shirt_010","title":"巻き方の手順｜位置と留め方の応用","tags":["knot","method","photo","shirt_010","view-unspecified"],"note":"応用編4・5。結びの作り方と、正面からずらしたときの布の偏りを参照。","source":"https://monde.jp/blog/?p=13563","image":null},{"id":"shirt_011_1","group":"shirt_011","title":"実演動画｜腰の厚みを抑える巻き方","tags":["front","knot","method","video","photo","shirt_011","volume"],"note":"余った身頃を折って腰に巻くときの布量を観察。","source":"https://www.youtube.com/watch?v=Mr8TWzyG9g0","image":null},{"id":"shirt_015_1","group":"shirt_015","title":"VRoid｜前・後ろ・側面の柄比較","tags":["front","back","side","drape","plaid","avatar","multiview","3d","shirt_015","hem","on-body"],"note":"実物を巻いた写真を元にしたテクスチャの作例。柄・丈・色の参考。","source":"https://booth.pm/ja/items/3628714","image":"https://booth.pximg.net/96d92d00-bd84-4d3d-b872-a320956ec113/i/3628714/4ffd7482-55af-4451-b1df-9b23a4cbbd28_base_resized.jpg"},{"id":"shirt_017_1","group":"shirt_017","title":"布シミュレーション｜後ろ斜めの変形","tags":["drape","simulation","plaid","3d","shirt_017","oblique","hem"],"note":"『Real-Time Collision-Free Cloth Simulation』のチェックシャツの例。体から離れる方向と布の折れを比較。","source":"https://etd.ohiolink.edu/acprod/odb_etd/etd/r/1501/10?clear=10&p10_accession_num=osu1638494824912169","image":null}]}</script>
+<script>
+const {groups,items}=JSON.parse(document.querySelector('#catalog').textContent);
+const topicInfo={
+ shirt_around_waist:['投稿索引で腰巻きシャツに分類','#d5aa9f'],
+ clothes_around_waist:['投稿索引で衣服の腰巻きに分類','#b7a5d9'],
+ pixiv:['作者の掲載元はPixiv','#a0c5ed'],
+ seated:['座った姿勢','#9dc6bf'],
+ "oblique":["明らかな斜め視点","#a6a9cb"],
+ "view-unspecified":["前・横・後ろを特定できない資料","#b3abb5"],
+ "hem":["裾の形・丈・落ち方","#a8c6ab"],
+ "layering":["上着・ボトムとの重なり","#b3b9d8"],
+ "volume":["布の厚み・張り出し・分量","#d7b595"],
+ "asymmetry":["左右で布量や裾位置が異なる","#d39baa"],
+ "on-body":["人体・アバターでの着用","#9ac9c3"],
+ "garment-only":["人体なしの衣装資料","#b5b7ce"],
+ "flannel":["ネル・フランネル","#c99fae"],
+ "oxford":["オックスフォード生地","#9bb9d5"],
+ new:['今回追加した資料・画像','#eac78d'],
+ "silhouette":["全体の輪郭・腰回り","#a3bbc9"],
+ "side-knot":["脇に寄せた結び目","#e6a191"],
+ "plain":["無地","#b8bbc9"],
+ "stripe":["ストライプ","#a0caf3"],
+ "denim":["デニム・シャンブレー","#96b7e0"],
+ "lightweight":["薄手・透け感","#c5aee1"],
+ "wrap":["身頃を重ねたラップ状の巻き方","#e2bd9c"],
+ "illustration":["衣装設定画・イラスト","#d9a6cb"],
+ "low":["低い位置で巻く・結ぶ","#b9c499"],
+ front:['前から','#a6b2e5'],back:['後ろから','#8fc9b0'],side:['側面・斜め側面','#8bc7d7'],knot:['結び目','#e29aa8'],
+ drape:['背面の垂れ','#99c5a3'],detail:['寄り','#dfbe97'],cuff:['袖口','#d2b1d9'],buttons:['前立て・ボタン','#d0c69d'],
+ plaid:['チェック柄','#cfa1bb'],multiview:['一枚で複数方向','#95b9da'],method:['結び方・手順','#beace2'],
+ photo:['実写','#a4c5ea'],'3d':['3D作例','#c5ace4'],video:['動画','#cab991'],
+ avatar:['アバター用','#94ccc2'],simulation:['布のシミュレーション','#a0bbd8'],comparison:['別素材や長丈の比較例','#c1b3a7']
+};
+const tagLabels={"shirt_around_waist":"腰巻きシャツ","clothes_around_waist":"衣服の腰巻き","pixiv":"ピクシブ掲載","seated":"座り姿","oblique":"斜め","view-unspecified":"向き未確認","hem":"裾","layering":"布の重なり","volume":"布の厚み","asymmetry":"左右差","on-body":"着用","garment-only":"衣装単体","flannel":"ネル生地","oxford":"オックスフォード生地","new":"今回の追加","silhouette":"輪郭","side-knot":"脇結び","plain":"無地","stripe":"縞柄","denim":"デニム","lightweight":"薄手","wrap":"巻き重ね","illustration":"イラスト","low":"低めの位置","front":"正面","side":"側面","back":"背面","knot":"結び目","drape":"背面の垂れ","detail":"寄り","cuff":"袖口","buttons":"前立て・ボタン","plaid":"チェック柄","multiview":"複数方向","method":"結び方","photo":"実写","3d":"立体作例","video":"動画","avatar":"アバター","simulation":"布のシミュレーション","comparison":"比較資料"};
+const selected=new Set();
+const byId=id=>document.getElementById(id);
+const grid=byId('grid');
+const detail=byId('detail');
+const external=byId('external');
+let visibleItems=[];
+let detailItems=[];
+let detailIndex=-1;
+const counts=new Map();
+const imageGroupCounts=new Map();
+for(const item of items){
+ if(!item.image)continue;
+ for(const tag of new Set(item.tags))if(Object.hasOwn(groups,tag))imageGroupCounts.set(tag,(imageGroupCounts.get(tag)||0)+1);
+}
+const groupTags=Object.keys(groups).filter(tag=>imageGroupCounts.get(tag)>=2);
+const visibleGroupTags=new Set(groupTags);
+const isVisibleTag=tag=>!Object.hasOwn(groups,tag)||visibleGroupTags.has(tag);
+for(const item of items) for(const tag of item.tags) counts.set(tag,(counts.get(tag)||0)+1);
+const make=(tag,content='',className='')=>{
+ const node=document.createElement(tag);
+ node.textContent=content;
+ if(className) node.className=className;
+ return node;
+};
+function link(text,url){
+ const a=make('a',text);a.href=url;a.target='_blank';a.rel='noopener noreferrer';return a;
+}
+function change(tag){
+ if(selected.has(tag)) selected.delete(tag);else selected.add(tag);
+ render();
+}
+function chip(tag,showCount=false){
+ const info=topicInfo[tag];
+ const label=Object.hasOwn(groups,tag)?groups[tag]:tagLabels[tag]||tag;
+ const node=make('button','#'+label,'chip');
+ node.type='button';node.dataset.tag=tag;
+ node.title=info?.[0]||groups[tag];
+ if(info) node.style.setProperty('--chip',info[1]);
+ if(showCount) node.append(make('span',String(counts.get(tag)||0)));
+ node.setAttribute('aria-pressed',String(selected.has(tag)));
+ node.addEventListener('click',()=>change(tag));
+ return node;
+}
+function imageCandidates(item){
+ const original=new URL(item.image);
+ const variants=[original.href];
+ const sized=/^\/c\/\d+x\d+[^/]*\//;
+ if(original.hostname==='booth.pximg.net' && sized.test(original.pathname)){
+  const full=new URL(original);full.pathname=full.pathname.replace(sized,'/');variants.unshift(full.href);
+ }
+ if(original.hostname==='precious.ismcdn.jp' && original.pathname.includes('/720mw/')){
+  const small=new URL(original);small.pathname=small.pathname.replace('/720mw/','/226/');variants.push(small.href);
+ }
+ if(original.search && ['images.oceans.tokyo.jp','cdn-fastly.upstyledaily.com','cdn.myportfolio.com','storagefiles.clo-set.com'].includes(original.hostname)){
+  const full=new URL(original);full.search='';variants.push(full.href);
+ }
+ return [...new Set(variants)];
+}
+function thumbnailCandidates(item){
+ const original=new URL(item.image);
+ const thumb=new URL(original);
+ if(thumb.hostname==='precious.ismcdn.jp'){
+  thumb.pathname=thumb.pathname.replace('/720mw/','/226/');
+ }else if(thumb.hostname==='images.pexels.com'){
+  thumb.searchParams.set('w','360');
+ }else if(thumb.hostname==='images.oceans.tokyo.jp'&&thumb.searchParams.has('h')){
+  thumb.searchParams.set('h','400');
+ }
+ return [...new Set([thumb.href,...imageCandidates(item)])];
+}
+function addImage(container,item,className=''){
+ const preview=className==='preview';
+ const candidates=preview?imageCandidates(item):thumbnailCandidates(item);
+ const image=make('img','',className);
+ image.alt=item.title;
+ image.decoding='async';
+ if(!preview) image.fetchPriority='low';
+ let attempt=0;
+ image.addEventListener('error',()=>{
+  if(!image.isConnected)return;
+  attempt++;
+  if(attempt<candidates.length){
+   image.src=candidates[attempt];
+   return;
+  }
+  image.remove();
+  const retry=make('button','画像を再試行','minor');
+  retry.type='button';
+  retry.addEventListener('click',()=>{
+   retry.remove();
+   addImage(container,item,className);
+  });
+  if(className==='preview'){
+   container.replaceChildren(make('p','画像を読み込めませんでした。元画像を別タブで開けます。','media-status'),retry);
+  }
+ });
+ container.append(image);
+ image.src=candidates[0];
+}
+const detailMedia=byId('detail-media');
+let zoom=1;
+let fitWidth=0;
+let fitHeight=0;
+let pan=null;
+function stopPan(){
+ if(!pan)return;
+ const {pointerId}=pan;
+ pan=null;
+ delete detailMedia.dataset.panning;
+ if(detailMedia.hasPointerCapture(pointerId))detailMedia.releasePointerCapture(pointerId);
+}
+detailMedia.addEventListener('pointerdown',event=>{
+ if(pan||event.button!==0||!event.target.matches('.preview[data-zoomed]'))return;
+ event.preventDefault();
+ detailMedia.setPointerCapture(event.pointerId);
+ pan={pointerId:event.pointerId,x:event.clientX,y:event.clientY,left:detailMedia.scrollLeft,top:detailMedia.scrollTop};
+ detailMedia.dataset.panning='';
+});
+detailMedia.addEventListener('pointermove',event=>{
+ if(pan?.pointerId!==event.pointerId)return;
+ detailMedia.scrollLeft=pan.left+pan.x-event.clientX;
+ detailMedia.scrollTop=pan.top+pan.y-event.clientY;
+});
+for(const type of ['pointerup','pointercancel','lostpointercapture']){
+ detailMedia.addEventListener(type,event=>{
+  if(pan?.pointerId===event.pointerId)stopPan();
+ });
+}
+detailMedia.addEventListener('dragstart',event=>{
+ if(event.target.matches('.preview'))event.preventDefault();
+});
+detail.addEventListener('close',stopPan);
+function isBackdrop(event){
+ if(event.target!==detail)return false;
+ const rect=detail.getBoundingClientRect();
+ return event.clientX<rect.left||event.clientX>=rect.right||event.clientY<rect.top||event.clientY>=rect.bottom;
+}
+let backdropPress=false;
+detail.addEventListener('pointerdown',event=>{
+ backdropPress=event.button===0&&isBackdrop(event);
+});
+detail.addEventListener('pointercancel',()=>{backdropPress=false});
+detail.addEventListener('click',event=>{
+ if(backdropPress&&isBackdrop(event))detail.close();
+ backdropPress=false;
+});
+
+detailMedia.addEventListener('wheel',event=>{
+ const image=detailMedia.querySelector('.preview');
+ if(event.target!==image||!image.naturalWidth||!event.deltaY)return;
+ event.preventDefault();
+ const nextZoom=Math.max(1,Math.min(5,zoom*(event.deltaY<0?1.2:1/1.2)));
+ if(Math.abs(nextZoom-zoom)<0.001)return;
+ const rect=image.getBoundingClientRect();
+ const x=(event.clientX-rect.left)/rect.width;
+ const y=(event.clientY-rect.top)/rect.height;
+ if(zoom===1){fitWidth=rect.width;fitHeight=rect.height;}
+ stopPan();
+ zoom=nextZoom;
+ if(zoom===1){
+  delete image.dataset.zoomed;
+  image.style.removeProperty('width');image.style.removeProperty('height');
+  detailMedia.scrollTo(0,0);
+  return;
+ }
+ image.dataset.zoomed='';
+ image.style.width=(fitWidth*zoom)+'px';
+ image.style.height=(fitHeight*zoom)+'px';
+ const moved=image.getBoundingClientRect();
+ detailMedia.scrollLeft+=moved.left+x*moved.width-event.clientX;
+ detailMedia.scrollTop+=moved.top+y*moved.height-event.clientY;
+},{passive:false});
+function openDetail(item){
+ detailItems=visibleItems.filter(entry=>entry.image||entry.id===item.id);
+ detailIndex=detailItems.findIndex(entry=>entry.id===item.id);
+ showDetail();
+ detail.showModal();
+}
+function showDetail(){
+ const item=detailItems[detailIndex];
+ byId('previous').disabled=detailIndex===0;
+ byId('next').disabled=detailIndex===detailItems.length-1;
+ byId('position').textContent=(detailIndex+1)+' / '+detailItems.length;
+
+ byId('detail-title').textContent=item.title;
+ byId('detail-note').textContent=item.note;
+ const media=detailMedia;
+ stopPan();
+ zoom=1;
+ media.replaceChildren();
+ media.scrollTo(0,0);
+ if(item.image && external.checked) addImage(media,item,'preview');
+ else media.append(make('p',item.image?'外部サムネイル表示はオフです。':'画像や動画は出典ページで閲覧できます。'));
+ const links=byId('detail-links');
+ links.replaceChildren(link('出典ページ ↗',item.source));
+ if(item.image){
+  const original=imageCandidates(item)[0];
+  links.append(link('元画像を開く ↗',original));
+  if(original!==item.image)links.append(link('掲載サムネイル ↗',item.image));
+ }
+ if(item.alternateSource) links.append(link('別掲載ページ ↗',item.alternateSource));
+ const tags=byId('detail-tags');tags.replaceChildren(...item.tags.filter(isVisibleTag).map(tag=>chip(tag)));
+}
+function navigate(step){
+ const index=detailIndex+step;
+ if(index<0||index>=detailItems.length)return;
+ detailIndex=index;
+ showDetail();
+}
+byId('previous').addEventListener('click',()=>navigate(-1));
+byId('next').addEventListener('click',()=>navigate(1));
+detail.addEventListener('keydown',event=>{
+ if(event.altKey||event.ctrlKey||event.metaKey||!['ArrowLeft','ArrowRight'].includes(event.key))return;
+ event.preventDefault();
+ navigate(event.key==='ArrowLeft'?-1:1);
+});
+const cards=new Map();
+function loadThumbnail(thumb){
+ const item=cards.get(thumb.closest('article').dataset.item)?.item;
+ if(external.checked&&item?.image&&!thumb.querySelector('img'))addImage(thumb,item);
+}
+const nearViewport=new IntersectionObserver(entries=>{
+ for(const entry of entries){
+  if(!entry.isIntersecting)continue;
+  nearViewport.unobserve(entry.target);
+  loadThumbnail(entry.target);
+ }
+},{rootMargin:'650px 0px'});
+function card(item){
+ const article=make('article','','tile');
+ article.dataset.item=item.id;
+ const thumb=make('button','','thumb');thumb.type='button';thumb.setAttribute('aria-label',item.title+'の詳細');
+ const fallback=make('span','','placeholder');
+ fallback.append(make('strong',item.title),make('small',item.image&&external.checked?'出典の外部画像 ↗':'出典を参照 ↗'));
+ thumb.append(fallback);
+ thumb.addEventListener('click',()=>openDetail(item));
+ article.append(thumb,make('h2',item.title));
+ return {article,thumb,item};
+}
+function render(){
+ const matches=items.filter(item=>[...selected].every(tag=>item.tags.includes(tag)));
+ visibleItems=matches;
+ const matching=new Set(matches.map(item=>item.id));
+ for(const [id,{article,thumb,item}] of cards){
+  article.hidden=!matching.has(id);
+  if(!item.image)continue;
+  if(!external.checked){
+   nearViewport.unobserve(thumb);
+   thumb.querySelector('img')?.remove();
+  }else if(!article.hidden&&!thumb.querySelector('img')){
+   nearViewport.observe(thumb);
+  }else if(article.hidden){
+   nearViewport.unobserve(thumb);
+  }
+ }
+ const groupCount=new Set(matches.flatMap(item=>item.tags.filter(tag=>visibleGroupTags.has(tag)))).size;
+ byId('count').textContent=matches.length+' 件 / '+items.length+' 件 · '+groupCount+' グループ';
+ byId('empty').hidden=matches.length!==0;
+ byId('reset').disabled=selected.size===0;
+ for(const button of document.querySelectorAll('button[data-tag]')) button.setAttribute('aria-pressed',String(selected.has(button.dataset.tag)));
+}
+byId('topics').append(...['front','side','back',...Object.keys(topicInfo).filter(tag=>!['front','side','back'].includes(tag))].filter(tag=>counts.has(tag)).map(tag=>chip(tag,true)));
+const groupFilters=byId('outfits');
+groupFilters.append(...groupTags.map(tag=>chip(tag,true)));
+groupFilters.closest('details').hidden=groupTags.length===0;
+byId('reset').addEventListener('click',()=>{selected.clear();render();});
+external.addEventListener('change',render);
+const initialCards=document.createDocumentFragment();
+for(const item of items){
+ const entry=card(item);
+ cards.set(item.id,entry);
+ initialCards.append(entry.article);
+}
+grid.append(initialCards);
+render();
+</script>
+</body>
+</html>

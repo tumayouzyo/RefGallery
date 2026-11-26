@@ -2,3 +2,5 @@ __pycache__/
 *.py[cod]
 /Outputs/*
 !/Outputs/.gitkeep
+!/Outputs/メカデザイン_gallery.html
+!/Outputs/腰巻きシャツ資料集_gallery.html
