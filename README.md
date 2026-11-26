@@ -2,6 +2,10 @@
 ```
 git clone https://github.com/tumayouzyo/RefGallery.git
 ```
+if use Exif
+```
+python -m pip install Pillow
+```
 
 ## Usage
 local image
