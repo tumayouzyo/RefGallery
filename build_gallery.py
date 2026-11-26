@@ -79,6 +79,18 @@ def reference(value, base, output, mode, allow_missing=False):
     return quote(Path(relative).as_posix(), safe="/")
 
 
+FOCAL_LENGTH_STEPS = (8, 10, 12, 14, 15, 16, 18, 20, 24, 28, 35, 40, 50, 55,
+                      60, 70, 85, 100, 105, 120, 135, 150, 180, 200, 250, 300,
+                      400, 500, 600, 800, 1000, 1200)
+APERTURE_STEPS = (0.95, 1.2, 1.4, 1.8, 2, 2.8, 3.5, 4, 4.5, 5.6, 6.3, 7.1,
+                  8, 9, 10, 11, 13, 16, 18, 22, 25, 32, 45, 64)
+ISO_STEPS = (50, 100, 200, 400, 800, 1250, 1600, 3200, 6400)
+
+
+def nearest_step(value, steps):
+    return min(steps, key=lambda step: (abs(value - step), step)) if value is not None else None
+
+
 def photo_exif(path):
     if Image is None or path.suffix.lower() == ".svg":
         return {}
@@ -106,13 +118,13 @@ def photo_exif(path):
         date = datetime.strptime(date[:10], "%Y:%m:%d").strftime("%y-%m-%d")
     except ValueError:
         date = ""
-    focal = number(values.get(37386))
-    aperture = number(values.get(33437))
+    focal = nearest_step(number(values.get(37386)), FOCAL_LENGTH_STEPS)
+    aperture = nearest_step(number(values.get(33437)), APERTURE_STEPS)
     exposure = number(values.get(33434))
     iso_value = values.get(34855) or values.get(34867)
     if isinstance(iso_value, (tuple, list)):
         iso_value = next(iter(iso_value), None)
-    iso = number(iso_value)
+    iso = nearest_step(number(iso_value), ISO_STEPS)
     shutter = ""
     if exposure:
         fraction = Fraction(exposure).limit_denominator(1000000)
@@ -144,7 +156,8 @@ def exif_sort_key(tag, label):
         if field in patterns:
             match = re.fullmatch(patterns[field], folded)
             if match:
-                return rank, False, Fraction(match[1]), folded
+                value = Fraction(match[1])
+                return rank, False, -value if field == "shutter" else value, folded
     except (ValueError, ZeroDivisionError):
         pass
     return rank, True, 0, folded
