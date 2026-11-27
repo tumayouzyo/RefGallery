@@ -18,5 +18,5 @@ or
 RefGalleryを使用して、xxxについての資料を収集
 ```
 ```
-Collect references on xxx using RefGallery.
+Use RefGallery to collect references on xxx using tags.
 ```
